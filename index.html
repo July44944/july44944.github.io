@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bianca Pan | Cloud & Operations Expert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0D0D;
+  --bg2:#141414;
+  --bg3:#1A1A1A;
+  --accent:#E07B00;
+  --accent-dim:rgba(224,123,0,0.15);
+  --text:#FFFFFF;
+  --text2:#888888;
+  --text3:#555555;
+  --border:#2A2A2A;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter','Noto Sans SC',system-ui,sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+body.zh{font-family:'Noto Sans SC','Inter',system-ui,sans-serif}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ── SELECTION ── */
+::selection{background:var(--accent);color:#000}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  transition:background 0.4s,backdrop-filter 0.4s,border-bottom 0.4s;
+}
+nav.scrolled{
+  background:rgba(13,13,13,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-size:1.1rem;font-weight:600;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  color:var(--text2);text-decoration:none;font-size:0.875rem;
+  font-weight:400;letter-spacing:0.05em;text-transform:uppercase;
+  transition:color 0.2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+  background:var(--accent);transition:width 0.3s;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.lang-toggle{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);cursor:pointer;
+  font-size:0.8rem;font-family:inherit;
+  padding:0.35rem 0.75rem;border-radius:4px;
+  transition:all 0.2s;letter-spacing:0.05em;
+}
+.lang-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.hamburger{
+  display:none;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:4px;
+}
+.hamburger span{
+  display:block;width:22px;height:1.5px;
+  background:var(--text2);transition:all 0.3s;
+}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px)}
+
+/* ── MOBILE NAV ── */
+.mobile-menu{
+  display:none;position:fixed;top:var(--nav-h);left:0;right:0;
+  background:rgba(13,13,13,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:1.5rem 5%;z-index:999;
+}
+.mobile-menu.open{display:block}
+.mobile-menu ul{list-style:none;display:flex;flex-direction:column;gap:1.25rem}
+.mobile-menu a{
+  color:var(--text2);text-decoration:none;font-size:1rem;
+  text-transform:uppercase;letter-spacing:0.08em;
+  transition:color 0.2s;
+}
+.mobile-menu a:hover{color:var(--accent)}
+.mobile-lang{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+
+/* ── SECTIONS ── */
+section{padding:6rem 5%;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.section-label{
+  font-size:0.75rem;font-weight:500;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:1rem;
+}
+.section-title{
+  font-size:clamp(2rem,5vw,3.5rem);font-weight:700;
+  line-height:1.1;margin-bottom:1.5rem;
+}
+.section-subtitle{
+  font-size:1rem;color:var(--text2);max-width:600px;line-height:1.8;
+}
+.divider{
+  width:40px;height:2px;background:var(--accent);
+  margin:1.5rem 0;
+}
+
+/* ── ANIMATE IN ── */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+#home{
+  position:relative;overflow:hidden;
+  min-height:100vh;padding-top:calc(var(--nav-h) + 2rem);
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 60% 50% at 70% 50%, rgba(224,123,0,0.06) 0%, transparent 70%);
+}
+/* geometric grid lines */
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);
+}
+.hero-inner{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+  max-width:1200px;margin:0 auto;
+}
+.hero-content{}
+.hero-tag{
+  display:inline-block;
+  font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--accent);border:1px solid rgba(224,123,0,0.3);
+  padding:0.35rem 1rem;border-radius:999px;margin-bottom:1.5rem;
+}
+.hero-name{
+  font-size:clamp(2.8rem,6vw,5rem);font-weight:700;
+  line-height:1;letter-spacing:-0.02em;margin-bottom:0.5rem;
+}
+.hero-name-cn{
+  font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:300;
+  color:var(--text2);margin-bottom:1.5rem;
+  font-family:'Noto Sans SC',sans-serif;letter-spacing:0.1em;
+}
+.hero-title{
+  font-size:clamp(0.9rem,1.8vw,1.15rem);
+  color:var(--text2);font-weight:400;margin-bottom:0.5rem;
+  min-height:1.6em;
+}
+#typewriter{color:var(--accent);border-right:2px solid var(--accent);padding-right:2px;animation:blink 0.7s step-end infinite}
+@keyframes blink{0%,100%{border-color:var(--accent)}50%{border-color:transparent}}
+.hero-desc{
+  font-size:0.95rem;color:var(--text3);line-height:1.8;
+  margin:1.5rem 0;max-width:480px;
+}
+.hero-stats{
+  display:flex;gap:2rem;margin-bottom:2.5rem;
+  flex-wrap:wrap;
+}
+.stat-item{display:flex;flex-direction:column}
+.stat-num{
+  font-size:2rem;font-weight:700;color:var(--text);
+  line-height:1;
+}
+.stat-num span{color:var(--accent)}
+.stat-label{font-size:0.75rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.25rem}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.75rem 1.75rem;border-radius:4px;
+  font-size:0.875rem;font-weight:500;font-family:inherit;
+  text-decoration:none;cursor:pointer;
+  transition:all 0.25s;letter-spacing:0.03em;
+  border:1px solid transparent;
+}
+.btn-primary{
+  background:var(--accent);color:#000;border-color:var(--accent);
+}
+.btn-primary:hover{background:transparent;color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(224,123,0,0.2)}
+.btn-outline{
+  background:transparent;color:var(--text);border-color:var(--border);
+}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+/* hero visual — cert panel */
+.hero-visual{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.cert-panel{display:flex;flex-direction:column;gap:0.55rem;width:310px}
+.cert-panel-title{
+  font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:0.2rem;padding-left:0.2rem;
+}
+.cp-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:0.7rem 0.9rem;
+  display:flex;align-items:center;gap:0.75rem;
+  transition:border-color 0.3s,transform 0.25s;
+}
+.cp-card:hover{border-color:rgba(224,123,0,0.45);transform:translateX(4px)}
+.cp-card.cp-featured{
+  border-color:rgba(224,123,0,0.35);
+  background:linear-gradient(135deg,rgba(224,123,0,0.08) 0%,var(--bg2) 100%);
+}
+.cp-card.cp-studying{
+  border-color:rgba(99,102,241,0.35);
+  background:linear-gradient(135deg,rgba(99,102,241,0.08) 0%,var(--bg2) 100%);
+}
+.cp-icon{font-size:1.35rem;flex-shrink:0;line-height:1}
+.cp-info{flex:1;min-width:0}
+.cp-name{font-size:0.78rem;font-weight:600;color:var(--text);line-height:1.3}
+.cp-org{font-size:0.68rem;color:var(--text3);margin-top:2px}
+.cp-badge{
+  font-size:0.6rem;font-weight:700;letter-spacing:0.07em;
+  padding:0.18rem 0.5rem;border-radius:999px;
+  flex-shrink:0;white-space:nowrap;
+  background:var(--accent-dim);color:var(--accent);
+}
+.cp-badge.ai{background:rgba(99,102,241,0.18);color:#a5b4fc}
+.cp-badge.edu{background:rgba(99,102,241,0.18);color:#a5b4fc}
+
+/* ════════════════════════════════════
+   CAREER
+════════════════════════════════════ */
+#career{min-height:auto;padding:6rem 5%}
+.career-inner{max-width:1200px;margin:0 auto;width:100%}
+.about-block{
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;
+  margin-bottom:5rem;align-items:start;
+}
+.about-text p{font-size:0.95rem;color:var(--text2);line-height:1.9;margin-bottom:1rem}
+.about-text p strong{color:var(--text)}
+.highlights{display:flex;flex-direction:column;gap:1rem}
+.highlight-item{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem 1.25rem;
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  transition:border-color 0.3s;
+}
+.highlight-item:hover{border-color:rgba(224,123,0,0.4)}
+.hi-num{
+  font-size:1.5rem;font-weight:700;color:var(--accent);
+  line-height:1;min-width:48px;
+}
+.hi-text{font-size:0.85rem;color:var(--text2);line-height:1.5}
+.hi-text strong{display:block;color:var(--text);margin-bottom:2px;font-size:0.9rem}
+
+/* timeline */
+.timeline-title{
+  font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:2rem;
+}
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:1px;background:var(--border);
+}
+.tl-item{
+  position:relative;margin-bottom:3rem;
+  padding-left:1.5rem;
+}
+.tl-item::before{
+  content:'';position:absolute;left:-2rem;top:6px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--border);
+  transition:border-color 0.3s,background 0.3s;
+}
+.tl-item:hover::before,.tl-item.active::before{
+  border-color:var(--accent);background:var(--accent);
+}
+.tl-date{
+  font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:0.4rem;
+}
+.tl-role{font-size:1.05rem;font-weight:600;margin-bottom:0.2rem}
+.tl-company{font-size:0.85rem;color:var(--text2);margin-bottom:0.75rem}
+.tl-points{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+.tl-points li{
+  font-size:0.85rem;color:var(--text2);line-height:1.6;
+  padding-left:1rem;position:relative;
+}
+.tl-points li::before{
+  content:'—';position:absolute;left:0;color:var(--accent);
+}
+
+/* certs */
+.certs-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+  margin-top:3rem;
+}
+.cert-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:1.25rem;
+  transition:border-color 0.3s,transform 0.3s;
+  cursor:default;
+}
+.cert-card:hover{
+  border-color:rgba(224,123,0,0.5);
+  transform:translateY(-3px);
+}
+.cert-icon{font-size:1.75rem;margin-bottom:0.75rem;display:block}
+.cert-name{font-size:0.82rem;font-weight:500;line-height:1.4;color:var(--text)}
+.cert-org{font-size:0.72rem;color:var(--text3);margin-top:0.25rem}
+
+/* skills */
+.skills-section{margin-top:4rem}
+.skills-grid{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1.25rem}
+.skill-tag{
+  padding:0.4rem 0.9rem;border-radius:999px;
+  font-size:0.78rem;color:var(--text2);
+  background:var(--bg2);border:1px solid var(--border);
+  transition:all 0.2s;
+}
+.skill-tag:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+
+/* ════════════════════════════════════
+   TRAVEL
+════════════════════════════════════ */
+#travel{min-height:auto;padding:6rem 5%;background:var(--bg2)}
+.travel-inner{max-width:1200px;margin:0 auto;width:100%}
+.travel-stats{
+  display:flex;gap:3rem;margin:2.5rem 0;flex-wrap:wrap;
+}
+.ts-item{display:flex;flex-direction:column}
+.ts-num{font-size:2.5rem;font-weight:700;color:var(--accent);line-height:1}
+.ts-label{font-size:0.75rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.3rem}
+/* ── D3 MAP ── */
+.map-wrap{
+  position:relative;width:100%;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin:2rem 0;
+}
+.map-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.7rem 1rem;border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:0.5rem;
+}
+.map-legend{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--text3)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ld-primary{background:var(--accent)}
+.ld-visited{background:rgba(224,123,0,0.32);border:1px solid rgba(224,123,0,0.5)}
+.ld-default{background:#1C1C1C;border:1px solid #333}
+.notes-btn{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-size:0.72rem;color:var(--text2);
+  background:var(--bg2);border:1px solid var(--border);
+  padding:0.32rem 0.85rem;border-radius:999px;
+  cursor:pointer;transition:all 0.2s;font-family:inherit;
+}
+.notes-btn:hover{border-color:var(--accent);color:var(--accent)}
+#d3map{width:100%;display:block;background:#0A0A0A}
+#d3map svg{width:100%;height:auto;display:block}
+.map-country{cursor:pointer;transition:opacity 0.2s}
+.map-country:hover{opacity:0.75}
+.map-tooltip{
+  position:fixed;background:var(--bg);border:1px solid var(--border);
+  padding:0.35rem 0.85rem;border-radius:4px;font-size:0.75rem;
+  pointer-events:none;opacity:0;transition:opacity 0.15s;
+  white-space:nowrap;z-index:200;color:var(--text);
+  box-shadow:0 4px 16px rgba(0,0,0,0.5);
+}
+.travel-desc{font-size:0.9rem;color:var(--text2);line-height:1.8;max-width:700px;margin-top:1rem}
+
+/* ── TRAVEL NOTES OVERLAY ── */
+.tnotes-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:var(--bg);
+  transform:translateY(100%);
+  transition:transform 0.48s cubic-bezier(0.4,0,0.2,1);
+  overflow-y:auto;overscroll-behavior:contain;
+}
+.tnotes-overlay.open{transform:translateY(0)}
+.tnotes-head{
+  position:sticky;top:0;z-index:10;
+  background:rgba(13,13,13,0.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:1rem 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+}
+.tnotes-head-left{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.tnotes-head-title{font-size:1.05rem;font-weight:600}
+.tnotes-head-title span{color:var(--accent)}
+.tnotes-filters{display:flex;gap:0.4rem;flex-wrap:wrap}
+.filter-pill{
+  font-size:0.7rem;padding:0.25rem 0.65rem;border-radius:999px;
+  background:var(--bg2);border:1px solid var(--border);
+  color:var(--text3);cursor:pointer;transition:all 0.2s;font-family:inherit;
+}
+.filter-pill:hover,.filter-pill.active{
+  border-color:var(--accent);color:var(--accent);background:var(--accent-dim);
+}
+.tnotes-close{
+  background:none;border:1px solid var(--border);color:var(--text2);
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;flex-shrink:0;
+}
+.tnotes-close:hover{border-color:var(--accent);color:var(--accent)}
+.tnotes-body{padding:2rem 5%}
+.tnotes-grid{columns:3 280px;column-gap:1rem}
+.tcard{
+  break-inside:avoid;margin-bottom:1rem;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+  transition:border-color 0.3s,transform 0.3s;
+  display:inline-block;width:100%;
+}
+.tcard:hover{border-color:rgba(224,123,0,0.45);transform:translateY(-4px)}
+.tcard-img{height:155px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.tcard-img.tall{height:200px}
+.tcard-bg-icon{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;opacity:0.14;
+}
+.tcard-flag{position:absolute;top:12px;left:12px;font-size:1.3rem;line-height:1}
+.tcard-loc-bar{
+  position:relative;z-index:1;width:100%;
+  background:linear-gradient(to top,rgba(0,0,0,0.72),transparent);
+  padding:1.5rem 0.9rem 0.55rem;
+  font-size:0.67rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(255,255,255,0.65);
+}
+.tcard-body{padding:0.8rem 0.9rem 0.9rem}
+.tcard-title{font-size:0.9rem;font-weight:600;margin-bottom:0.35rem;line-height:1.35}
+.tcard-tags{display:flex;flex-wrap:wrap;gap:0.28rem;margin-bottom:0.45rem}
+.tcard-tag{
+  font-size:0.62rem;padding:0.12rem 0.45rem;
+  background:var(--bg3);border-radius:999px;color:var(--text3);
+}
+.tcard-excerpt{font-size:0.78rem;color:var(--text2);line-height:1.65}
+.tnotes-footer{
+  text-align:center;padding:1.5rem 0 3rem;
+  font-size:0.8rem;color:var(--text3);
+}
+.tnotes-footer a{color:var(--accent);text-decoration:none}
+@media(max-width:600px){
+  .tnotes-grid{columns:1}
+  .tnotes-head,.tnotes-body{padding-left:1.25rem;padding-right:1.25rem}
+}
+
+/* ════════════════════════════════════
+   CONTACT
+════════════════════════════════════ */
+#contact{min-height:auto;padding:6rem 5%;align-items:center;text-align:center}
+.contact-inner{max-width:600px;margin:0 auto;width:100%}
+#contact .section-label,#contact .section-title,#contact .divider{margin-left:auto;margin-right:auto}
+#contact .divider{margin:1.5rem auto}
+.contact-email{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-size:1.1rem;color:var(--text);text-decoration:none;
+  margin:2rem 0 2.5rem;
+  transition:color 0.2s;
+}
+.contact-email:hover{color:var(--accent)}
+.contact-email svg{width:18px;height:18px;stroke:currentColor;fill:none}
+.contact-links{
+  display:flex;justify-content:center;gap:1.25rem;flex-wrap:wrap;
+  margin-bottom:3rem;
+}
+.contact-link{
+  display:flex;align-items:center;gap:0.6rem;
+  padding:0.75rem 1.5rem;border-radius:6px;
+  background:var(--bg2);border:1px solid var(--border);
+  color:var(--text2);text-decoration:none;font-size:0.875rem;
+  transition:all 0.25s;
+}
+.contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.contact-link svg{width:18px;height:18px;stroke:currentColor;fill:none;flex-shrink:0}
+.wechat-hint{
+  display:none;position:absolute;
+  background:var(--bg);border:1px solid var(--border);
+  padding:0.75rem 1rem;border-radius:6px;
+  font-size:0.8rem;color:var(--text2);
+  white-space:nowrap;top:calc(100% + 8px);left:50%;
+  transform:translateX(-50%);z-index:10;
+}
+.contact-link-wrap{position:relative}
+.contact-link-wrap:hover .wechat-hint{display:block}
+
+.cv-download{
+  display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;
+}
+.cv-dl-btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.65rem 1.4rem;border-radius:4px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text2);text-decoration:none;font-size:0.82rem;
+  transition:all 0.25s;
+}
+.cv-dl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.cv-dl-btn svg{width:14px;height:14px;stroke:currentColor;fill:none}
+
+/* ── FOOTER ── */
+footer{
+  padding:2rem 5%;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-copy{font-size:0.78rem;color:var(--text3)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--accent)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-desc{margin-left:auto;margin-right:auto}
+  .hero-stats{justify-content:center}
+  .hero-ctas{justify-content:center}
+  .hero-visual{display:none}
+  .about-block{grid-template-columns:1fr}
+  .certs-grid{grid-template-columns:repeat(2,1fr)}
+  .nav-links,.nav-right .lang-toggle{display:none}
+  .hamburger{display:flex}
+  .nav-right{gap:0.75rem}
+  .nav-right .lang-toggle{display:none}
+}
+@media(max-width:600px){
+  section{padding:4rem 1.25rem}
+  #career{padding:4rem 1.25rem}
+  #travel{padding:4rem 1.25rem}
+  #contact{padding:4rem 1.25rem}
+  .certs-grid{grid-template-columns:1fr 1fr}
+  .travel-stats{gap:1.5rem}
+  footer{padding:1.5rem 1.25rem;flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">B<span>.</span>Pan</a>
+  <ul class="nav-links">
+    <li><a href="#home" data-i18n="nav_home">Home</a></li>
+    <li><a href="#career" data-i18n="nav_career">Career</a></li>
+    <li><a href="#travel" data-i18n="nav_travel">Travel</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN | 中</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#home" data-i18n="nav_home">Home</a></li>
+    <li><a href="#career" data-i18n="nav_career">Career</a></li>
+    <li><a href="#travel" data-i18n="nav_travel">Travel</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+  </ul>
+  <div class="mobile-lang">
+    <button class="lang-toggle" id="langToggleMobile">EN | 中</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag reveal" data-i18n="hero_tag">AWS/HCIE Certified · Open to Global Opportunities</div>
+      <h1 class="hero-name reveal reveal-delay-1">Bianca Pan</h1>
+      <div class="hero-name-cn reveal reveal-delay-1">潘文芝</div>
+      <div class="hero-title reveal reveal-delay-2">
+        <span id="typewriter"></span>
+      </div>
+      <p class="hero-desc reveal reveal-delay-2" data-i18n="hero_desc">
+        8.5 years driving cloud transformation and cross-border operations across China, the Middle East, and beyond. Bridging strategy, process, and technology on a global scale.
+      </p>
+      <div class="hero-stats reveal reveal-delay-3">
+        <div class="stat-item">
+          <div class="stat-num"><span class="count" data-target="8.5" data-suffix="+ yrs">0</span></div>
+          <div class="stat-label" data-i18n="stat_exp">Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span class="count" data-target="40" data-suffix="+ <span style='color:var(--accent)'>↗</span>">0</span></div>
+          <div class="stat-label" data-i18n="stat_countries">Countries</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span class="count" data-target="6" data-suffix="">0</span></div>
+          <div class="stat-label" data-i18n="stat_certs">Certifications</div>
+        </div>
+      </div>
+      <div class="hero-ctas reveal reveal-delay-4">
+        <a href="resume-en.pdf" download class="btn btn-primary" data-i18n="btn_cv">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download CV
+        </a>
+        <a href="#contact" class="btn btn-outline" data-i18n="btn_contact">Get in Touch</a>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal reveal-delay-2">
+      <div class="cert-panel">
+        <div class="cert-panel-title" data-i18n="cp_title">Credentials & Education</div>
+
+        <!-- MS in progress -->
+        <div class="cp-card cp-studying">
+          <div class="cp-icon">🎓</div>
+          <div class="cp-info">
+            <div class="cp-name" data-i18n="ms_name">M.S. Management Science &amp; Data Analytics</div>
+            <div class="cp-org" data-i18n="ms_org">F1 · Currently Enrolled · USA</div>
+          </div>
+          <div class="cp-badge edu" data-i18n="ms_badge">In Progress</div>
+        </div>
+
+        <!-- AWS ML — featured AI -->
+        <div class="cp-card cp-featured">
+          <div class="cp-icon">🤖</div>
+          <div class="cp-info">
+            <div class="cp-name">AWS Certified Machine Learning</div>
+            <div class="cp-org">Specialty · Amazon Web Services</div>
+          </div>
+          <div class="cp-badge ai">AI / ML</div>
+        </div>
+
+        <!-- AWS SAP -->
+        <div class="cp-card">
+          <div class="cp-icon">☁️</div>
+          <div class="cp-info">
+            <div class="cp-name">AWS Solutions Architect</div>
+            <div class="cp-org">Professional · Amazon Web Services</div>
+          </div>
+          <div class="cp-badge">AWS PRO</div>
+        </div>
+
+        <!-- HCIE -->
+        <div class="cp-card">
+          <div class="cp-icon">🏆</div>
+          <div class="cp-info">
+            <div class="cp-name">HCIE Cloud Solutions Architect</div>
+            <div class="cp-org">Expert · Huawei</div>
+          </div>
+          <div class="cp-badge">EXPERT</div>
+        </div>
+
+        <!-- PMP -->
+        <div class="cp-card">
+          <div class="cp-icon">📋</div>
+          <div class="cp-info">
+            <div class="cp-name">Project Management Professional</div>
+            <div class="cp-org">PMP® · PMI</div>
+          </div>
+          <div class="cp-badge">PMP</div>
+        </div>
+
+        <!-- CBPP -->
+        <div class="cp-card">
+          <div class="cp-icon">⚙️</div>
+          <div class="cp-info">
+            <div class="cp-name">Certified Business Process Professional</div>
+            <div class="cp-org">CBPP · ABPMP</div>
+          </div>
+          <div class="cp-badge">CBPP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section id="career">
+  <div class="career-inner">
+    <div class="reveal">
+      <div class="section-label" data-i18n="career_label">Professional Journey</div>
+      <h2 class="section-title" data-i18n="career_title">Career</h2>
+      <div class="divider"></div>
+    </div>
+
+    <!-- About + Highlights -->
+    <div class="about-block">
+      <div class="about-text reveal">
+        <p data-i18n="about_p1"><strong>Cloud operations strategist</strong> with 8.5 years of experience spanning cross-border e-commerce and enterprise cloud computing in the Middle East.</p>
+        <p data-i18n="about_p2">Specialized in cloud business process design, CRM/BSS platform optimization, and digital transformation project delivery. Proven track record managing enterprise clients across 30+ countries with monthly revenue impact of $6M+.</p>
+        <p data-i18n="about_p3">Multilingual communicator (Chinese · English · Japanese-beginner) with deep cross-cultural expertise in Islamic business environments. Open to global opportunities.</p>
+      </div>
+      <div class="highlights reveal reveal-delay-1">
+        <div class="highlight-item">
+          <div class="hi-num">50%</div>
+          <div class="hi-text"><strong data-i18n="hi1_title">Cycle Time Reduction</strong><span data-i18n="hi1_desc">Streamlined LTC invoicing & order processing via CRM/BSS automation</span></div>
+        </div>
+        <div class="highlight-item">
+          <div class="hi-num">$6M</div>
+          <div class="hi-text"><strong data-i18n="hi2_title">Monthly Revenue Managed</strong><span data-i18n="hi2_desc">Stable monthly flow in UAE government & enterprise cloud market</span></div>
+        </div>
+        <div class="highlight-item">
+          <div class="hi-num">95%</div>
+          <div class="hi-text"><strong data-i18n="hi3_title">Customer Satisfaction</strong><span data-i18n="hi3_desc">Achieved through platform optimization and solution enablement</span></div>
+        </div>
+        <div class="highlight-item">
+          <div class="hi-num">30%</div>
+          <div class="hi-text"><strong data-i18n="hi4_title">Comm. Cost Reduced</strong><span data-i18n="hi4_desc">Built 3-tier Middle East cloud support system and knowledge base</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="reveal">
+      <div class="timeline-title" data-i18n="timeline_label">Work Experience</div>
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-date">2021 — 2025</div>
+          <div class="tl-role" data-i18n="job1_role">Senior Operation Engineer</div>
+          <div class="tl-company">CSI INTERFUSION TECHNOLOGY SERVICE · Core42 & Huawei Cloud · Abu Dhabi, UAE</div>
+          <ul class="tl-points">
+            <li data-i18n="job1_p1">Led C42cloud platform delivery as key feature owner; ensured 100% on-time launch with stable $6M/mo UAE enterprise revenue.</li>
+            <li data-i18n="job1_p2">Designed cloud business processes and optimized LTC workflow, boosting fulfillment efficiency by 50% for BD/SA/TAM teams.</li>
+            <li data-i18n="job1_p3">Built 3-tier Middle East cloud support system; reduced communication costs 30% and operational risk 25%.</li>
+            <li data-i18n="job1_p4">Optimized Huawei Cloud CRM & C42 BSS platform for billing, recharge, and invoicing — cut order cycle time 50%, raised CSAT to 95%.</li>
+          </ul>
+        </div>
+        <div class="tl-item reveal reveal-delay-1">
+          <div class="tl-date">2018 — 2020</div>
+          <div class="tl-role" data-i18n="job2_role">Operations Manager</div>
+          <div class="tl-company">Happiness Sharing Cruise Management · Shenzhen, China</div>
+          <ul class="tl-points">
+            <li data-i18n="job2_p1">Managed WeChat Mini Program store and social channels; improved user conversion rates and brand awareness.</li>
+            <li data-i18n="job2_p2">Reduced logistics costs 20% by partnering with vendors via cloud-based inventory tools.</li>
+            <li data-i18n="job2_p3">Integrated AI/ML demand forecasting tools, boosting operational efficiency by 30%.</li>
+          </ul>
+        </div>
+        <div class="tl-item reveal reveal-delay-2">
+          <div class="tl-date">2016 — 2018</div>
+          <div class="tl-role" data-i18n="job3_role">E-Commerce Operation Lead</div>
+          <div class="tl-company">Shenzhen Icheckey Technology · Shenzhen, China</div>
+          <ul class="tl-points">
+            <li data-i18n="job3_p1">Managed B2B/B2C operations across Alibaba, AliExpress, Amazon, Shopee, Lazada — drove consistent monthly order growth.</li>
+            <li data-i18n="job3_p2">Built global multi-site product SOP, reducing cross-border collaboration errors and supporting expansion into NA, SEA, ME, EU, LATAM.</li>
+            <li data-i18n="job3_p3">Achieved 95% quota attainment; grew repeat business 40% via tailored billing solutions.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="reveal" style="margin-top:4rem">
+      <div class="timeline-title" data-i18n="certs_label">Certifications</div>
+      <div class="certs-grid">
+        <div class="cert-card reveal">
+          <span class="cert-icon">☁️</span>
+          <div class="cert-name">AWS Certified Solutions Architect</div>
+          <div class="cert-org">Professional · Amazon Web Services</div>
+        </div>
+        <div class="cert-card reveal reveal-delay-1">
+          <span class="cert-icon">🏆</span>
+          <div class="cert-name">HCIE Cloud Service Solutions Architect</div>
+          <div class="cert-org">Expert Level · Huawei</div>
+        </div>
+        <div class="cert-card reveal reveal-delay-2">
+          <span class="cert-icon">📋</span>
+          <div class="cert-name">Project Management Professional (PMP®)</div>
+          <div class="cert-org">PMI</div>
+        </div>
+        <div class="cert-card reveal reveal-delay-1">
+          <span class="cert-icon">⚙️</span>
+          <div class="cert-name">Certified Business Process Professional (CBPP)</div>
+          <div class="cert-org">ABPMP International</div>
+        </div>
+        <div class="cert-card reveal reveal-delay-2">
+          <span class="cert-icon">🤖</span>
+          <div class="cert-name">AWS Certified Machine Learning</div>
+          <div class="cert-org">Specialty · Amazon Web Services</div>
+        </div>
+        <div class="cert-card reveal reveal-delay-3">
+          <span class="cert-icon">🔧</span>
+          <div class="cert-name">HCIP Cloud Service Solutions Architect</div>
+          <div class="cert-org">Professional · Huawei</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="skills-section reveal" style="margin-top:4rem">
+      <div class="timeline-title" data-i18n="skills_label">Skills</div>
+      <div class="skills-grid">
+        <span class="skill-tag">Cloud Architecture</span>
+        <span class="skill-tag">Process Design</span>
+        <span class="skill-tag">CRM Optimization</span>
+        <span class="skill-tag">BSS/Billing Systems</span>
+        <span class="skill-tag">Project Delivery</span>
+        <span class="skill-tag">IaaS/PaaS Solutions</span>
+        <span class="skill-tag">Data-Driven Operations</span>
+        <span class="skill-tag">Cross-Cultural Management</span>
+        <span class="skill-tag">E-Commerce Operations</span>
+        <span class="skill-tag">B2B Sales Enablement</span>
+        <span class="skill-tag">Machine Learning (Applied)</span>
+        <span class="skill-tag">SAP / SCM / RMS</span>
+        <span class="skill-tag">Agile / CBPP</span>
+        <span class="skill-tag">Cost Optimization</span>
+        <span class="skill-tag">Data Visualization</span>
+        <span class="skill-tag">Stakeholder Management</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAVEL -->
+<section id="travel">
+  <div class="travel-inner">
+    <div class="reveal">
+      <div class="section-label" data-i18n="travel_label">Global Footprint</div>
+      <h2 class="section-title" data-i18n="travel_title">Travel</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="travel-stats reveal reveal-delay-1">
+      <div class="ts-item">
+        <div class="ts-num">40<span style="color:var(--text2);font-size:1.5rem">+</span></div>
+        <div class="ts-label" data-i18n="ts_countries">Countries</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-num">4</div>
+        <div class="ts-label" data-i18n="ts_continents">Continents</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-num">4.5</div>
+        <div class="ts-label" data-i18n="ts_me">Yrs in Middle East</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-num">3</div>
+        <div class="ts-label" data-i18n="ts_langs">Languages</div>
+      </div>
+    </div>
+
+    <div class="map-wrap reveal">
+      <div class="map-bar">
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-dot ld-primary"></div>
+            <span data-i18n="legend_primary">China · UAE · USA</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot ld-visited"></div>
+            <span data-i18n="legend_visited">Visited</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot ld-default"></div>
+            <span data-i18n="legend_other">Other</span>
+          </div>
+        </div>
+        <button class="notes-btn" id="openNotes">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span data-i18n="notes_btn">Travel Notes →</span>
+        </button>
+      </div>
+      <div id="d3map"></div>
+      <div class="map-tooltip" id="mapTooltip"></div>
+    </div>
+
+    <p class="travel-desc reveal" data-i18n="travel_desc">
+      Personal and business travel spanning 40+ countries across Asia, the Middle East, Europe, and the Americas. 4.5 years based in Abu Dhabi with deep familiarity of Islamic business culture, Gulf market dynamics, and cross-cultural team collaboration.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="section-label" data-i18n="contact_label">Get in Touch</div>
+      <h2 class="section-title" data-i18n="contact_title">Contact</h2>
+      <div class="divider"></div>
+      <p class="section-subtitle" data-i18n="contact_desc">Open to opportunities globally — cloud operations, digital transformation, process strategy. Let's connect.</p>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <a href="mailto:bianca006009@gmail.com" class="contact-email">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        bianca006009@gmail.com
+      </a>
+    </div>
+    <div class="contact-links reveal reveal-delay-2">
+      <a href="https://www.linkedin.com/in/bianca-pan" target="_blank" rel="noopener" class="contact-link">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <div class="contact-link-wrap">
+        <a href="#" class="contact-link" onclick="return false">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          WeChat
+        </a>
+        <div class="wechat-hint" data-i18n="wechat_hint">WeChat ID: bianca006009</div>
+      </div>
+    </div>
+    <div class="cv-download reveal reveal-delay-3">
+      <a href="resume-en.pdf" download class="cv-dl-btn">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-i18n="cv_en">Resume (English)</span>
+      </a>
+      <a href="resume-zh.pdf" download class="cv-dl-btn">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-i18n="cv_zh">简历（中文）</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 Bianca Pan · <span data-i18n="footer_copy">All rights reserved</span></div>
+  <div class="footer-links">
+    <a href="#home" data-i18n="nav_home">Home</a>
+    <a href="#career" data-i18n="nav_career">Career</a>
+    <a href="#travel" data-i18n="nav_travel">Travel</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+  </div>
+</footer>
+
+<!-- TRAVEL NOTES OVERLAY -->
+<div class="tnotes-overlay" id="tnotesOverlay">
+  <div class="tnotes-head">
+    <div class="tnotes-head-left">
+      <div class="tnotes-head-title" data-i18n="notes_title">Travel Notes <span>/ 旅行手账</span></div>
+      <div class="tnotes-filters">
+        <button class="filter-pill active" data-filter="all" data-i18n="filter_all">All</button>
+        <button class="filter-pill" data-filter="china" data-i18n="filter_china">China</button>
+        <button class="filter-pill" data-filter="middleeast" data-i18n="filter_me">Middle East</button>
+        <button class="filter-pill" data-filter="asia" data-i18n="filter_asia">Asia</button>
+        <button class="filter-pill" data-filter="europe" data-i18n="filter_eu">Europe</button>
+        <button class="filter-pill" data-filter="americas" data-i18n="filter_am">Americas</button>
+      </div>
+    </div>
+    <button class="tnotes-close" id="closeNotes">✕</button>
+  </div>
+  <div class="tnotes-body">
+    <div class="tnotes-grid" id="tnotesGrid"></div>
+  </div>
+  <div class="tnotes-footer" data-i18n="notes_footer">More travel stories coming soon ·&nbsp;<a href="#contact" id="notesContact">Say hello →</a></div>
+</div>
+
+<script>
+// ── I18N DATA ──────────────────────────────────────────
+const i18n = {
+  en: {
+    nav_home:'Home', nav_career:'Career', nav_travel:'Travel', nav_contact:'Contact',
+    hero_tag:'AWS/HCIE Certified · Open to Global Opportunities',
+    hero_desc:'8.5 years driving cloud transformation and cross-border operations across China, the Middle East, and beyond. Bridging strategy, process, and technology on a global scale.',
+    stat_exp:'Experience', stat_countries:'Countries', stat_certs:'Certifications',
+    btn_cv:'Download CV', btn_contact:'Get in Touch',
+    career_label:'Professional Journey', career_title:'Career',
+    about_p1:'<strong>Cloud operations strategist</strong> with 8.5 years of experience spanning cross-border e-commerce and enterprise cloud computing in the Middle East.',
+    about_p2:'Specialized in cloud business process design, CRM/BSS platform optimization, and digital transformation project delivery. Proven track record managing enterprise clients across 30+ countries with monthly revenue impact of $6M+.',
+    about_p3:'Multilingual communicator (Chinese · English · Japanese-beginner) with deep cross-cultural expertise in Islamic business environments. Open to global opportunities.',
+    hi1_title:'Cycle Time Reduction', hi1_desc:'Streamlined LTC invoicing & order processing via CRM/BSS automation',
+    hi2_title:'Monthly Revenue Managed', hi2_desc:'Stable monthly flow in UAE government & enterprise cloud market',
+    hi3_title:'Customer Satisfaction', hi3_desc:'Achieved through platform optimization and solution enablement',
+    hi4_title:'Comm. Cost Reduced', hi4_desc:'Built 3-tier Middle East cloud support system and knowledge base',
+    timeline_label:'Work Experience',
+    job1_role:'Senior Operation Engineer',
+    job1_p1:'Led C42cloud platform delivery as key feature owner; ensured 100% on-time launch with stable $6M/mo UAE enterprise revenue.',
+    job1_p2:'Designed cloud business processes and optimized LTC workflow, boosting fulfillment efficiency by 50% for BD/SA/TAM teams.',
+    job1_p3:'Built 3-tier Middle East cloud support system; reduced communication costs 30% and operational risk 25%.',
+    job1_p4:'Optimized Huawei Cloud CRM & C42 BSS platform for billing, recharge, and invoicing — cut order cycle time 50%, raised CSAT to 95%.',
+    job2_role:'Operations Manager',
+    job2_p1:'Managed WeChat Mini Program store and social channels; improved user conversion rates and brand awareness.',
+    job2_p2:'Reduced logistics costs 20% by partnering with vendors via cloud-based inventory tools.',
+    job2_p3:'Integrated AI/ML demand forecasting tools, boosting operational efficiency by 30%.',
+    job3_role:'E-Commerce Operation Lead',
+    job3_p1:'Managed B2B/B2C operations across Alibaba, AliExpress, Amazon, Shopee, Lazada — drove consistent monthly order growth.',
+    job3_p2:'Built global multi-site product SOP, reducing cross-border collaboration errors and supporting expansion into NA, SEA, ME, EU, LATAM.',
+    job3_p3:'Achieved 95% quota attainment; grew repeat business 40% via tailored billing solutions.',
+    cp_title:'Credentials & Education',
+    ms_name:'M.S. Management Science & Data Analytics',
+    ms_org:'F1 · Currently Enrolled · USA',
+    ms_badge:'In Progress',
+    certs_label:'Certifications', skills_label:'Skills',
+    travel_label:'Global Footprint', travel_title:'Travel',
+    ts_countries:'Countries Visited', ts_continents:'Continents', ts_me:'Yrs in Middle East', ts_langs:'Languages',
+    travel_desc:'Personal and business travel spanning 40+ countries across Asia, the Middle East, Europe, and the Americas. 4.5 years based in Abu Dhabi with deep familiarity of Islamic business culture, Gulf market dynamics, and cross-cultural team collaboration.',
+    legend_primary:'China · UAE · USA', legend_visited:'Visited', legend_other:'Other',
+    notes_btn:'Travel Notes →',
+    notes_title:'Travel Notes <span>/ 旅行手账</span>',
+    filter_all:'All', filter_china:'China', filter_me:'Middle East', filter_asia:'Asia', filter_eu:'Europe', filter_am:'Americas',
+    notes_footer:'More travel stories coming soon ·&nbsp;<a href="#contact" id="notesContact">Say hello →</a>',
+    contact_label:'Get in Touch', contact_title:'Contact',
+    contact_desc:'Open to opportunities globally — cloud operations, digital transformation, process strategy. Let\'s connect.',
+    wechat_hint:'WeChat ID: bianca006009',
+    cv_en:'Resume (English)', cv_zh:'简历（中文）',
+    footer_copy:'All rights reserved',
+  },
+  zh: {
+    nav_home:'首页', nav_career:'职业', nav_travel:'旅行', nav_contact:'联系',
+    hero_tag:'AWS/HCIE 认证 · 开放全球机会',
+    hero_desc:'8.5年云计算与跨境电商经验，横跨中国、中东及全球多地。擅长将战略、流程与技术融合，推动全球化业务增长。',
+    stat_exp:'年经验', stat_countries:'国家/地区', stat_certs:'专业认证',
+    btn_cv:'下载简历', btn_contact:'联系我',
+    career_label:'职业历程', career_title:'职业',
+    about_p1:'<strong>云运营战略专家</strong>，拥有8.5年跨境电商与中东企业云计算从业经验。',
+    about_p2:'专注于云业务流程设计、CRM/BSS平台优化及数字化转型项目交付。管理30+国家企业客户，月流水贡献超600万美元。',
+    about_p3:'中英日三语沟通能力，深度熟悉伊斯兰商业文化与海湾市场规则。开放全球求职机会。',
+    hi1_title:'周期缩短', hi1_desc:'通过CRM/BSS自动化优化LTC开票与订单处理流程',
+    hi2_title:'月均营收管理', hi2_desc:'阿联酋政企市场月流水稳定600万美金',
+    hi3_title:'客户满意度', hi3_desc:'通过平台优化与解决方案赋能实现',
+    hi4_title:'沟通成本降低', hi4_desc:'搭建中东云三层支撑体系并维护知识库',
+    timeline_label:'工作经历',
+    job1_role:'高级运营工程师',
+    job1_p1:'主导C42cloud平台项目交付，担任关键特性Owner，确保项目100%按期上线，阿联酋政企市场月流水稳定600万美元。',
+    job1_p2:'设计C42云业务流程，优化LTC工作流，提升BD/SA/TAM团队业务履行效率50%。',
+    job1_p3:'搭建中东云三层支撑体系，减少沟通成本30%，降低运营风险25%。',
+    job1_p4:'优化华为云CRM与C42云BSS平台的充值、开票、计费功能，缩短订单处理周期50%，客户满意度提升至95%。',
+    job2_role:'运营经理',
+    job2_p1:'统筹运营微信小程序商城及公众号，提升用户转化率和品牌知名度。',
+    job2_p2:'与供应商合作借助云端库存工具，降低物流成本20%。',
+    job2_p3:'引入AI/ML需求预测工具，提升运营效率30%。',
+    job3_role:'电商运营经理',
+    job3_p1:'管理阿里巴巴、AliExpress、亚马逊、Shopee、Lazada等B2B/B2C平台店铺，持续推动月均订单增长。',
+    job3_p2:'制定全球多站点产品信息管理SOP，支持业务扩张至北美、东南亚、中东、欧洲、拉美。',
+    job3_p3:'实现95%配额达成率，通过定制化计费方案推动复购增长40%。',
+    cp_title:'认证与教育背景',
+    ms_name:'管理科学与数据分析 硕士在读',
+    ms_org:'F1学签 · 在读中 · 美国',
+    ms_badge:'在读',
+    certs_label:'认证证书', skills_label:'技能',
+    travel_label:'全球足迹', travel_title:'旅行',
+    ts_countries:'到访国家/地区', ts_continents:'大洲', ts_me:'中东驻扎年限', ts_langs:'掌握语言',
+    travel_desc:'个人与商务旅行足迹遍布40+国家，横跨亚洲、中东、欧洲和美洲。在阿布扎比驻扎4.5年，深度熟悉伊斯兰商业文化、海湾市场规则及跨国团队协作。',
+    legend_primary:'中国 · 阿联酋 · 美国', legend_visited:'到访过', legend_other:'其他',
+    notes_btn:'旅行手账 →',
+    notes_title:'旅行手账 <span>/ Travel Notes</span>',
+    filter_all:'全部', filter_china:'中国', filter_me:'中东', filter_asia:'亚洲', filter_eu:'欧洲', filter_am:'美洲',
+    notes_footer:'更多旅行故事持续更新中 ·&nbsp;<a href="#contact" id="notesContact">联系我 →</a>',
+    contact_label:'联系我', contact_title:'联系',
+    contact_desc:'开放全球机会——云运营、数字化转型、流程战略。欢迎联系。',
+    wechat_hint:'微信号：bianca006009',
+    cv_en:'简历（英文）', cv_zh:'简历（中文）',
+    footer_copy:'保留所有权利',
+  }
+};
+
+// ── LANGUAGE TOGGLE ────────────────────────────────────
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.body.classList.toggle('zh', lang === 'zh');
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) {
+      el.innerHTML = i18n[lang][key];
+    }
+  });
+
+  // update toggle label
+  document.getElementById('langToggle').textContent = lang === 'en' ? 'EN | 中' : '中 | EN';
+  document.getElementById('langToggleMobile').textContent = lang === 'en' ? 'EN | 中' : '中 | EN';
+
+  // update title
+  document.title = lang === 'zh' ? '潘文芝 | 云计算与运营专家' : 'Bianca Pan | Cloud & Operations Expert';
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'en' ? 'zh' : 'en');
+}
+
+document.getElementById('langToggle').addEventListener('click', toggleLang);
+document.getElementById('langToggleMobile').addEventListener('click', toggleLang);
+
+// ── NAV SCROLL ─────────────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+  updateActiveNav();
+}, { passive: true });
+
+function updateActiveNav() {
+  const sections = ['home','career','travel','contact'];
+  const scrollY = window.scrollY + 100;
+  let active = 'home';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= scrollY) active = id;
+  });
+  document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(a => {
+    const href = a.getAttribute('href');
+    a.classList.toggle('active', href === '#' + active);
+  });
+}
+
+// ── HAMBURGER ──────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
+
+// ── TYPEWRITER ─────────────────────────────────────────
+const phrases = {
+  en: ['Cloud Operations Expert', 'Process Transformation Lead', 'AWS & HCIE Certified', 'Global CRM Strategist'],
+  zh: ['云运营专家', '流程数字化负责人', 'AWS & HCIE 认证', '全球CRM战略顾问']
+};
+let twIndex = 0, twChar = 0, twDeleting = false, twPause = 0;
+const twEl = document.getElementById('typewriter');
+
+function typewrite() {
+  const list = phrases[currentLang];
+  const word = list[twIndex % list.length];
+  if (twPause > 0) { twPause--; setTimeout(typewrite, 80); return; }
+  if (!twDeleting) {
+    twEl.textContent = word.slice(0, ++twChar);
+    if (twChar === word.length) { twDeleting = true; twPause = 22; }
+    setTimeout(typewrite, 90);
+  } else {
+    twEl.textContent = word.slice(0, --twChar);
+    if (twChar === 0) { twDeleting = false; twIndex++; twPause = 5; }
+    setTimeout(typewrite, 45);
+  }
+}
+setTimeout(typewrite, 800);
+
+// ── INTERSECTION OBSERVER (reveal) ─────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── COUNT-UP ANIMATION ─────────────────────────────────
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const isDecimal = target % 1 !== 0;
+    const duration = 1400;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = target * eased;
+      el.innerHTML = (isDecimal ? val.toFixed(1) : Math.floor(val)) + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    countObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.count').forEach(el => countObserver.observe(el));
+
+// ── D3 WORLD MAP ───────────────────────────────────────
+const mapTooltip = document.getElementById('mapTooltip');
+
+// ISO numeric codes
+const MAP_PRIMARY = new Set([840, 156, 784]); // USA, China, UAE
+const MAP_VISITED = new Set([
+  392,410,702,764,704,458,356,36,826,250,724,380,792,
+  682,634,414,48,512,368,400,818,504,288,124,528,300,
+  616,756,620,32,46,208,246,62,484,4,8,12,20,
+  31,50,51,554,578,710,752,703,705,191,352,372,158
+]);
+const MAP_NAMES = {
+  840:'United States',156:'China',784:'UAE',392:'Japan',
+  410:'South Korea',702:'Singapore',764:'Thailand',704:'Vietnam',
+  458:'Malaysia',356:'India',36:'Australia',826:'United Kingdom',
+  250:'France',724:'Spain',380:'Italy',792:'Turkey',
+  682:'Saudi Arabia',634:'Qatar',414:'Kuwait',48:'Bahrain',
+  512:'Oman',368:'Iraq',400:'Jordan',818:'Egypt',504:'Morocco',
+  288:'Ghana',124:'Canada',528:'Netherlands',300:'Greece',
+  616:'Poland',756:'Switzerland',620:'Portugal',76:'Brazil',
+  484:'Mexico',40:'Austria',56:'Belgium',208:'Denmark',
+  246:'Finland',554:'New Zealand',578:'Norway',710:'South Africa',
+  752:'Sweden',703:'Slovakia',705:'Slovenia',191:'Croatia',352:'Iceland',158:'Taiwan'
+};
+
+async function initD3Map() {
+  const container = document.getElementById('d3map');
+  if (!container) return;
+  const W = container.clientWidth || 900;
+  const H = Math.round(W * 0.5);
+
+  const svg = d3.select('#d3map').append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .style('width','100%').style('height','auto');
+
+  const proj = d3.geoNaturalEarth1()
+    .scale(W / 6.3)
+    .translate([W / 2, H / 2.05]);
+  const pathGen = d3.geoPath(proj);
+
+  // Ocean background
+  svg.append('path')
+    .datum({type:'Sphere'})
+    .attr('d', pathGen)
+    .attr('fill','#080808');
+
+  // Graticule grid
+  svg.append('path')
+    .datum(d3.geoGraticule()())
+    .attr('d', pathGen)
+    .attr('fill','none')
+    .attr('stroke','rgba(255,255,255,0.03)')
+    .attr('stroke-width', 0.5);
+
+  let world;
+  try {
+    world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+  } catch(e) {
+    container.innerHTML = '<div style="padding:2rem;text-align:center;color:#555;font-size:0.8rem">Map requires internet connection</div>';
+    return;
+  }
+
+  const countries = topojson.feature(world, world.objects.countries);
+
+  svg.selectAll('.map-country')
+    .data(countries.features)
+    .enter().append('path')
+    .attr('class','map-country')
+    .attr('d', pathGen)
+    .attr('fill', d => {
+      const id = +d.id;
+      if (MAP_PRIMARY.has(id)) return '#E07B00';
+      if (MAP_VISITED.has(id)) return 'rgba(224,123,0,0.28)';
+      return '#1C1C1C';
+    })
+    .attr('stroke', d => {
+      const id = +d.id;
+      if (MAP_PRIMARY.has(id)) return 'rgba(224,123,0,0.75)';
+      if (MAP_VISITED.has(id)) return 'rgba(224,123,0,0.38)';
+      return '#2A2A2A';
+    })
+    .attr('stroke-width', d => MAP_PRIMARY.has(+d.id) ? 0.9 : 0.3)
+    .on('mousemove', (event, d) => {
+      const id = +d.id;
+      const name = MAP_NAMES[id];
+      if (!name) { mapTooltip.style.opacity='0'; return; }
+      const tier = MAP_PRIMARY.has(id) ? ' ★' : '';
+      mapTooltip.textContent = name + tier;
+      mapTooltip.style.opacity = '1';
+      mapTooltip.style.left = (event.clientX + 14) + 'px';
+      mapTooltip.style.top  = (event.clientY - 38) + 'px';
+    })
+    .on('mouseleave', () => { mapTooltip.style.opacity='0'; });
+
+  // Border mesh overlay
+  svg.append('path')
+    .datum(topojson.mesh(world, world.objects.countries, (a,b) => a !== b))
+    .attr('d', pathGen)
+    .attr('fill','none')
+    .attr('stroke','rgba(0,0,0,0.4)')
+    .attr('stroke-width', 0.4);
+
+  // Labels for 3 primary countries
+  const labelData = [
+    {id:840, name:'🇺🇸 USA', offset:[0,-8]},
+    {id:156, name:'🇨🇳 China', offset:[0,-6]},
+    {id:784, name:'🇦🇪 UAE', offset:[0,-6]}
+  ];
+  labelData.forEach(({id, name, offset}) => {
+    const feat = countries.features.find(f => +f.id === id);
+    if (!feat) return;
+    const centroid = pathGen.centroid(feat);
+    if (!centroid || isNaN(centroid[0])) return;
+    svg.append('text')
+      .attr('x', centroid[0] + offset[0])
+      .attr('y', centroid[1] + offset[1])
+      .attr('text-anchor','middle')
+      .attr('font-size', Math.max(8, W/110))
+      .attr('font-family','Inter,system-ui,sans-serif')
+      .attr('font-weight','600')
+      .attr('fill','rgba(255,255,255,0.85)')
+      .attr('pointer-events','none')
+      .text(name);
+  });
+}
+
+initD3Map();
+
+// ── TRAVEL NOTES JOURNAL ────────────────────────────────
+const journalData = [
+  {
+    id:'shenzhen', region:'china', flag:'🇨🇳', icon:'🏙️', tall:false,
+    gradient:'linear-gradient(135deg,#c0392b 0%,#6b1a1a 100%)',
+    en:{loc:'Shenzhen, China', title:'Where It All Began',
+      tags:['E-Commerce','Tech City','Career Start'],
+      excerpt:"China's Silicon Valley — where I built my foundation in cross-border e-commerce, managing operations across Alibaba, Amazon, Shopee, and more."},
+    zh:{loc:'中国 深圳', title:'一切开始的地方',
+      tags:['跨境电商','科技城市','职业起点'],
+      excerpt:'中国的硅谷，职业生涯的起点。在这里深耕跨境电商运营，操盘阿里巴巴、亚马逊、Shopee等全球平台。'}
+  },
+  {
+    id:'hangzhou', region:'china', flag:'🇨🇳', icon:'🌿', tall:true,
+    gradient:'linear-gradient(135deg,#2c8a4a 0%,#1a5c30 100%)',
+    en:{loc:'Hangzhou, China', title:'University & Tea Hills',
+      tags:['University Life','Nature','Culture'],
+      excerpt:"Four years at Zhejiang A&F University, where bamboo forests meet tech ambition. Where I learned to think in systems — and fell in love with long-term thinking."},
+    zh:{loc:'中国 杭州', title:'大学岁月与茶香山间',
+      tags:['大学生活','自然','文化'],
+      excerpt:'浙江农林大学四年，竹林与科技梦想交织。在这里学会系统思考，也爱上了长远布局。'}
+  },
+  {
+    id:'abudhabi', region:'middleeast', flag:'🇦🇪', icon:'🏜️', tall:true,
+    gradient:'linear-gradient(135deg,#E07B00 0%,#7c4000 100%)',
+    en:{loc:'Abu Dhabi, UAE', title:'4.5 Years in the Desert',
+      tags:['Work Base','Cloud Ops','$6M Monthly'],
+      excerpt:"My longest chapter abroad. Managed cloud operations for UAE government & enterprise — $6M/mo steady revenue, 95% CSAT, and countless sunsets from SKY Tower."},
+    zh:{loc:'阿联酋 阿布扎比', title:'沙漠里的4.5年',
+      tags:['工作基地','云运营','月流水600万'],
+      excerpt:'最长的异乡岁月。负责阿联酋政企云运营，月流水稳定600万美元，客户满意度95%，还有SKY Tower无数个橙色夕阳。'}
+  },
+  {
+    id:'dubai', region:'middleeast', flag:'🇦🇪', icon:'🌆', tall:false,
+    gradient:'linear-gradient(135deg,#1a3a5c 0%,#0d2035 100%)',
+    en:{loc:'Dubai, UAE', title:'City of Impossible Heights',
+      tags:['Architecture','Business','Lifestyle'],
+      excerpt:"30 min from Abu Dhabi, a world apart. Burj Khalifa, the floating Gold Souk, and the fastest-growing business hub on Earth."},
+    zh:{loc:'阿联酋 迪拜', title:'不可能之高的城市',
+      tags:['建筑','商业','生活方式'],
+      excerpt:'距阿布扎比仅30分钟，却是截然不同的世界。哈利法塔、黄金市场，以及全球发展最快的商业中心。'}
+  },
+  {
+    id:'usa', region:'americas', flag:'🇺🇸', icon:'🎓', tall:false,
+    gradient:'linear-gradient(135deg,#1e3a8a 0%,#1e1b4b 100%)',
+    en:{loc:'United States', title:'New Chapter: Grad School',
+      tags:['F1 Visa','MS Student','Data Analytics'],
+      excerpt:"From Middle East cloud ops to American classrooms. Pursuing M.S. in Management Science & Data Analytics — merging enterprise experience with advanced analytics."},
+    zh:{loc:'美国', title:'新篇章：研究生求学路',
+      tags:['F1学签','硕士在读','数据分析'],
+      excerpt:'从中东云运营到美国课堂。攻读管理科学与数据分析硕士，将企业经验与高级数据分析相融合。'}
+  },
+  {
+    id:'riyadh', region:'middleeast', flag:'🇸🇦', icon:'🏛️', tall:true,
+    gradient:'linear-gradient(135deg,#1e5c2e 0%,#0f2d17 100%)',
+    en:{loc:'Riyadh, Saudi Arabia', title:'Vision 2030 in Motion',
+      tags:['Business','Transformation','Enterprise'],
+      excerpt:"Watching Saudi Arabia rewrite its own story at breakneck speed is extraordinary. The scale of transformation I witnessed firsthand — unforgettable."},
+    zh:{loc:'沙特阿拉伯 利雅得', title:'2030愿景进行时',
+      tags:['商业','数字转型','政企'],
+      excerpt:'亲眼见证沙特以前所未有的速度重写自己的故事。这种规模的变革，终生难忘。'}
+  },
+  {
+    id:'tokyo', region:'asia', flag:'🇯🇵', icon:'⛩️', tall:true,
+    gradient:'linear-gradient(135deg,#c0392b 0%,#2c2c2c 100%)',
+    en:{loc:'Tokyo, Japan', title:'Precision Meets Soul',
+      tags:['Culture','Food','Architecture'],
+      excerpt:"Japan taught me that perfection is a process. Shinjuku at midnight, ramen at 2am, Senso-ji at dawn — every hour a different city."},
+    zh:{loc:'日本 东京', title:'精密与灵魂的交汇',
+      tags:['文化','美食','建筑'],
+      excerpt:'日本教会我：完美是一个持续的过程。午夜的新宿，凌晨两点的拉面，黎明的浅草寺——每个时辰都是不同的城市。'}
+  },
+  {
+    id:'singapore', region:'asia', flag:'🇸🇬', icon:'🌴', tall:false,
+    gradient:'linear-gradient(135deg,#0f5c45 0%,#0a3d2e 100%)',
+    en:{loc:'Singapore', title:"Asia's Smartest Crossroads",
+      tags:['Business Hub','Multicultural','Efficiency'],
+      excerpt:"A city-state punching above its weight in every way — business, food, engineering, diversity. Every visit is a reminder of what\'s possible."},
+    zh:{loc:'新加坡', title:'亚洲最聪明的十字路口',
+      tags:['商业中心','多元文化','高效'],
+      excerpt:'这个城市国家在商业、美食、工程和多元性上远超其体量。每次到访都提醒我——一切皆有可能。'}
+  },
+  {
+    id:'istanbul', region:'europe', flag:'🇹🇷', icon:'🕌', tall:false,
+    gradient:'linear-gradient(135deg,#6b2d8b 0%,#2d1547 100%)',
+    en:{loc:'Istanbul, Turkey', title:'Two Continents, One City',
+      tags:['History','Bosphorus','East-West'],
+      excerpt:"Straddling Europe and Asia, Istanbul proves the world's most interesting places exist at intersections — geographic, cultural, historical."},
+    zh:{loc:'土耳其 伊斯坦布尔', title:'两大洲，一座城',
+      tags:['历史','博斯普鲁斯','东西方'],
+      excerpt:'横跨欧亚大陆，伊斯坦布尔证明了：世界上最有趣的地方永远诞生于交汇点——地理的、文化的、历史的。'}
+  },
+  {
+    id:'paris', region:'europe', flag:'🇫🇷', icon:'🗼', tall:false,
+    gradient:'linear-gradient(135deg,#4a3728 0%,#2d1f17 100%)',
+    en:{loc:'Paris, France', title:'Always Worth the Cliché',
+      tags:['Art','Architecture','Gastronomy'],
+      excerpt:"Every arrondissement tells a different story. The clichés exist because they\'re true — Paris is relentlessly, stubbornly beautiful."},
+    zh:{loc:'法国 巴黎', title:'陈词滥调，但永远值得',
+      tags:['艺术','建筑','美食'],
+      excerpt:'每个街区都是一个不同的故事。陈词滥调之所以存在，是因为它们是真的——巴黎固执地美丽着。'}
+  }
+];
+
+let notesOpen = false;
+
+function renderJournal(filter = 'all') {
+  const grid = document.getElementById('tnotesGrid');
+  if (!grid) return;
+  const filtered = filter === 'all' ? journalData : journalData.filter(d => d.region === filter);
+  grid.innerHTML = '';
+  filtered.forEach(entry => {
+    const d = entry[currentLang];
+    const card = document.createElement('div');
+    card.className = 'tcard';
+    card.innerHTML = `
+      <div class="tcard-img${entry.tall?' tall':''}" style="background:${entry.gradient}">
+        <div class="tcard-bg-icon">${entry.icon}</div>
+        <div class="tcard-flag">${entry.flag}</div>
+        <div class="tcard-loc-bar">${d.loc}</div>
+      </div>
+      <div class="tcard-body">
+        <div class="tcard-title">${d.title}</div>
+        <div class="tcard-tags">${d.tags.map(t=>`<span class="tcard-tag">${t}</span>`).join('')}</div>
+        <div class="tcard-excerpt">${d.excerpt}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('openNotes').addEventListener('click', () => {
+  document.getElementById('tnotesOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  notesOpen = true;
+  renderJournal('all');
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p.dataset.filter === 'all'));
+});
+
+document.getElementById('closeNotes').addEventListener('click', () => {
+  document.getElementById('tnotesOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  notesOpen = false;
+});
+
+document.getElementById('notesContact').addEventListener('click', () => {
+  document.getElementById('tnotesOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  notesOpen = false;
+});
+
+document.querySelectorAll('.filter-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    renderJournal(pill.dataset.filter);
+  });
+});
+
+// Keyboard ESC to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && notesOpen) {
+    document.getElementById('tnotesOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    notesOpen = false;
+  }
+});
+
+// ── INIT ───────────────────────────────────────────────
+applyLang(currentLang);
+updateActiveNav();
+</script>
+</body>
+</html>
