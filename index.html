@@ -64,8 +64,10 @@
   /* NAV */
   nav { position:fixed;top:0;left:0;width:100%;z-index:800;padding:24px 40px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s; }
   nav.scrolled { background:rgba(8,8,8,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--gold-border); }
-  .nav-logo { font-family:'DM Serif Display',serif;font-size:18px;letter-spacing:0.05em;color:var(--white);text-decoration:none; }
+  .nav-logo { font-family:'DM Serif Display',serif;font-size:18px;letter-spacing:0.05em;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px; }
   .nav-logo span { color:var(--gold); }
+  .nav-avatar { width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:center top;border:1.5px solid var(--gold);flex-shrink:0;transition:box-shadow 0.25s; }
+  .nav-logo:hover .nav-avatar { box-shadow:0 0 0 3px rgba(201,169,110,0.25); }
   .nav-links { display:flex;gap:30px;list-style:none; }
   .nav-links a { text-decoration:none;color:var(--text-muted);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;transition:color 0.2s; }
   .nav-links a:hover { color:var(--gold); }
@@ -287,6 +289,18 @@
   .map-country:hover { opacity:0.75; }
   .map-tooltip { position:fixed;background:var(--black);border:1px solid var(--gold-border);padding:5px 14px;font-size:12px;pointer-events:none;opacity:0;transition:opacity 0.15s;white-space:nowrap;z-index:2100;color:var(--white);box-shadow:0 4px 20px rgba(0,0,0,0.6); }
   .travel-desc-text { font-size:14px;color:var(--text-muted);line-height:1.8;max-width:700px;margin-top:8px; }
+  /* Arc pulse animation */
+  @keyframes map-pulse-scale {
+    0%   { transform:scale(1);   opacity:0.7; }
+    100% { transform:scale(4.5); opacity:0;   }
+  }
+  .pulse-ring {
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:map-pulse-scale 2.2s ease-out infinite;
+  }
+  .pulse-ring-2 { animation-delay:0.7s; }
+  .pulse-ring-3 { animation-delay:1.4s; }
 
   /* TRAVEL NOTES OVERLAY */
   .tnotes-overlay { position:fixed;inset:0;z-index:2000;background:var(--black);transform:translateY(100%);transition:transform 0.48s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;overscroll-behavior:contain; }
@@ -354,7 +368,10 @@
 </div>
 
 <nav id="navbar">
-  <a href="#hero" class="nav-logo">V<span>.</span>Pan</a>
+  <a href="#hero" class="nav-logo">
+    <img src="avatar.jpg" alt="Vincie Pan" class="nav-avatar">
+    V<span>.</span>Pan
+  </a>
   <ul class="nav-links">
     <li><a href="#credentials" data-en="Credentials" data-zh="认证资质">Credentials</a></li>
     <li><a href="#about"       data-en="About"       data-zh="关于我">About</a></li>
@@ -376,7 +393,7 @@
     <p class="hero-eyebrow en-text" data-en="Cloud · AI · Global Operations" data-zh="云计算 · AI认证 · 全球运营">Cloud · AI · Global Operations</p>
     <h1 class="hero-name">
       <span class="en-text">Vincie <span class="italic">Pan</span></span>
-      <span class="zh-text hero-name-zh" style="display:none">潘<span class="italic">文婷</span></span>
+      <span class="zh-text hero-name-zh" style="display:none">潘<span class="italic">文芝</span></span>
     </h1>
     <p class="hero-tagline en-text">AWS &amp; HCIE Certified Cloud Architect · AWS Machine Learning Specialty · 8.5 yrs global cloud ops &amp; cross-border e-commerce · Open to US &amp; global roles.</p>
     <p class="hero-tagline zh-text" style="display:none">AWS和HCIE认证云架构师 · AWS机器学习专项认证 · 8.5年全球云运营与跨境电商实战 · 开放美国及全球职位。</p>
@@ -651,9 +668,15 @@
     <div class="map-wrap fade-in">
       <div class="map-bar">
         <div class="map-legend">
-          <div class="legend-item"><div class="legend-dot ld-primary"></div><span class="en-text">China · UAE · USA</span><span class="zh-text" style="display:none">中国 · 阿联酋 · 美国</span></div>
-          <div class="legend-item"><div class="legend-dot ld-visited"></div><span class="en-text">Visited (40+)</span><span class="zh-text" style="display:none">到访国家（40+）</span></div>
-          <div class="legend-item"><div class="legend-dot ld-default"></div><span class="en-text">Other</span><span class="zh-text" style="display:none">其他</span></div>
+          <div class="legend-item"><div class="legend-dot ld-primary"></div><span class="en-text">Home · Long-term · Current base</span><span class="zh-text" style="display:none">母国 · 长期驻扎 · 当前所在</span></div>
+          <div class="legend-item"><div class="legend-dot ld-visited"></div><span class="en-text">Visited — 40+ countries</span><span class="zh-text" style="display:none">到访 — 40+国家</span></div>
+          <div class="legend-item" style="gap:5px;">
+            <svg width="22" height="8" viewBox="0 0 22 8" fill="none" style="flex-shrink:0">
+              <line x1="0" y1="4" x2="17" y2="4" stroke="rgba(201,169,110,0.55)" stroke-width="1" stroke-dasharray="3 2"/>
+              <polygon points="17 1,22 4,17 7" fill="rgba(201,169,110,0.7)"/>
+            </svg>
+            <span class="en-text">Routes → Arlington, VA</span><span class="zh-text" style="display:none">汇聚 → 阿灵顿</span>
+          </div>
         </div>
         <button class="notes-btn" id="openNotes" aria-label="Open travel notes">
           <span class="en-text">Travel Notes →</span>
@@ -892,42 +915,82 @@
 
   // ── D3 World Map ──
   const mapTooltip = document.getElementById('mapTooltip');
-  const MAP_PRIMARY = new Set([840, 156, 784]); // USA, China, UAE
+
+  // Primary = home country + longest abroad + current base
+  const MAP_PRIMARY = new Set([156, 784, 840]); // China (home) · UAE (4.5 yrs) · USA (current)
+
+  // All visited countries — ISO 3166-1 numeric
   const MAP_VISITED = new Set([
-    392,410,702,764,704,458,356,36,826,250,724,380,792,
-    682,634,414,48,512,368,400,818,504,288,124,528,300,
-    616,756,620,32,208,246,484,578,710,752,703,705,191,352,372,158
+    // Middle East
+    634, 682, 48, 512, 414,
+    // Caucasus
+    51, 268,
+    // East Asia
+    392, 158,
+    // Southeast Asia
+    702, 764, 608, 144,
+    // Europe — Western
+    250, 724, 380, 276, 528, 56, 620, 756, 492,
+    // Europe — Nordic
+    578, 752, 208, 246, 352,
+    // Europe — Southern
+    300, 792, 380,
+    // Europe — Eastern / Balkan
+    643, 616, 703, 191, 499, 688, 705, 428, 203, 348, 40,
+    // Indonesia
+    360
   ]);
+
   const MAP_NAMES = {
-    840:'United States',156:'China',784:'UAE',392:'Japan',
-    410:'South Korea',702:'Singapore',764:'Thailand',704:'Vietnam',
-    458:'Malaysia',356:'India',36:'Australia',826:'United Kingdom',
-    250:'France',724:'Spain',380:'Italy',792:'Turkey',
-    682:'Saudi Arabia',634:'Qatar',414:'Kuwait',48:'Bahrain',
-    512:'Oman',368:'Iraq',400:'Jordan',818:'Egypt',504:'Morocco',
-    288:'Ghana',124:'Canada',528:'Netherlands',300:'Greece',
-    616:'Poland',756:'Switzerland',620:'Portugal',32:'Argentina',
-    484:'Mexico',208:'Denmark',246:'Finland',578:'Norway',
-    710:'South Africa',752:'Sweden',703:'Slovakia',705:'Slovenia',
-    191:'Croatia',352:'Iceland',158:'Taiwan',372:'Ireland'
+    840:'United States', 156:'China', 784:'UAE',
+    634:'Qatar', 682:'Saudi Arabia', 48:'Bahrain', 512:'Oman', 414:'Kuwait',
+    51:'Armenia', 268:'Georgia',
+    392:'Japan', 158:'Taiwan',
+    702:'Singapore', 764:'Thailand', 608:'Philippines', 144:'Sri Lanka',
+    250:'France', 724:'Spain', 380:'Italy', 276:'Germany',
+    528:'Netherlands', 56:'Belgium', 620:'Portugal', 756:'Switzerland', 492:'Monaco',
+    578:'Norway', 752:'Sweden', 208:'Denmark', 246:'Finland', 352:'Iceland',
+    300:'Greece', 792:'Turkey',
+    643:'Russia', 616:'Poland', 703:'Slovakia', 191:'Croatia',
+    499:'Montenegro', 688:'Serbia', 705:'Slovenia', 428:'Latvia',
+    203:'Czech Republic', 348:'Hungary', 40:'Austria',
+    360:'Indonesia'
   };
+
+  // Arlington, VA — the current base (arc destination)
+  const ARLINGTON = [-77.10, 38.88];
 
   async function initD3Map() {
     const container = document.getElementById('d3map');
     if (!container || typeof d3 === 'undefined') return;
     const W = container.clientWidth || 900;
     const H = Math.round(W * 0.5);
+
     const svg = d3.select('#d3map').append('svg')
       .attr('viewBox', `0 0 ${W} ${H}`)
       .style('width','100%').style('height','auto');
+
+    // SVG defs — arrowhead markers
+    const defs = svg.append('defs');
+    ['arrow-dim','arrow-bright'].forEach((id, i) => {
+      const opacity = i === 0 ? 0.55 : 0.9;
+      defs.append('marker').attr('id', id)
+        .attr('markerWidth',5).attr('markerHeight',5)
+        .attr('refX',4.5).attr('refY',2.5).attr('orient','auto')
+        .append('polygon').attr('points','0 0,5 2.5,0 5')
+        .attr('fill', `rgba(201,169,110,${opacity})`);
+    });
+
     const proj = d3.geoNaturalEarth1()
       .scale(W / 6.3).translate([W / 2, H / 2.05]);
     const pathGen = d3.geoPath(proj);
+
     // Ocean
     svg.append('path').datum({type:'Sphere'}).attr('d', pathGen).attr('fill','#050505');
     // Graticule
     svg.append('path').datum(d3.geoGraticule()()).attr('d', pathGen)
-      .attr('fill','none').attr('stroke','rgba(201,169,110,0.04)').attr('stroke-width',0.5);
+      .attr('fill','none').attr('stroke','rgba(201,169,110,0.035)').attr('stroke-width',0.4);
+
     let world;
     try {
       world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
@@ -936,19 +999,23 @@
       return;
     }
     const countries = topojson.feature(world, world.objects.countries);
+
+    // Country fills
     svg.selectAll('.map-country').data(countries.features).enter().append('path')
       .attr('class','map-country').attr('d', pathGen)
       .attr('fill', d => {
         const id = +d.id;
-        if (MAP_PRIMARY.has(id)) return '#c9a96e';
-        if (MAP_VISITED.has(id)) return 'rgba(201,169,110,0.22)';
+        if (id === 156) return '#c9a96e';                    // China — home
+        if (id === 840) return '#c9a96e';                    // USA — current base
+        if (id === 784) return 'rgba(201,169,110,0.80)';     // UAE — 4.5 yr residence
+        if (MAP_VISITED.has(id)) return 'rgba(201,169,110,0.20)';
         return '#161616';
       })
       .attr('stroke', d => {
         const id = +d.id;
-        if (MAP_PRIMARY.has(id)) return 'rgba(201,169,110,0.8)';
-        if (MAP_VISITED.has(id)) return 'rgba(201,169,110,0.35)';
-        return '#2a2a2a';
+        if (MAP_PRIMARY.has(id)) return 'rgba(201,169,110,0.85)';
+        if (MAP_VISITED.has(id)) return 'rgba(201,169,110,0.32)';
+        return '#252525';
       })
       .attr('stroke-width', d => MAP_PRIMARY.has(+d.id) ? 0.9 : 0.3)
       .on('mousemove', (event, d) => {
@@ -961,21 +1028,86 @@
         mapTooltip.style.top=(event.clientY-38)+'px';
       })
       .on('mouseleave', () => { mapTooltip.style.opacity='0'; });
+
     // Border mesh
     svg.append('path').datum(topojson.mesh(world, world.objects.countries, (a,b)=>a!==b))
       .attr('d', pathGen).attr('fill','none')
-      .attr('stroke','rgba(0,0,0,0.35)').attr('stroke-width',0.4);
-    // Primary country labels
-    [{id:840,name:'🇺🇸 USA',ox:0,oy:-8},{id:156,name:'🇨🇳 China',ox:0,oy:-6},{id:784,name:'🇦🇪 UAE',ox:0,oy:-6}]
-      .forEach(({id,name,ox,oy}) => {
-        const feat = countries.features.find(f=>+f.id===id);
-        if(!feat) return;
+      .attr('stroke','rgba(0,0,0,0.4)').attr('stroke-width',0.35);
+
+    // ── Arc lines: every visited country → Arlington, VA ──
+    const allIds = [...MAP_PRIMARY, ...MAP_VISITED];
+    const arcData = [];
+    countries.features.forEach(f => {
+      const id = +f.id;
+      if (!allIds.includes(id) || id === 840) return; // USA is the target, skip
+      const geo = d3.geoCentroid(f);
+      if (!geo || isNaN(geo[0])) return;
+      arcData.push({ id, geo, isPrimary: MAP_PRIMARY.has(id) });
+    });
+
+    // Sort: primary arcs drawn on top
+    arcData.sort((a, b) => a.isPrimary - b.isPrimary);
+
+    svg.selectAll('.map-arc').data(arcData).enter().append('path')
+      .attr('class','map-arc')
+      .attr('d', d => pathGen({ type:'LineString', coordinates:[d.geo, ARLINGTON] }))
+      .attr('fill','none')
+      .attr('stroke', d => d.isPrimary
+        ? 'rgba(201,169,110,0.70)'
+        : 'rgba(201,169,110,0.22)')
+      .attr('stroke-width', d => d.isPrimary ? 1.4 : 0.55)
+      .attr('marker-end', d => d.isPrimary ? 'url(#arrow-bright)' : 'url(#arrow-dim)')
+      .each(function(d, i) {
+        const len = this.getTotalLength();
+        d3.select(this)
+          .attr('stroke-dasharray', `${len} ${len}`)
+          .attr('stroke-dashoffset', len)
+          .transition()
+          .duration(d.isPrimary ? 2200 : 1600)
+          .delay(500 + i * 35)
+          .ease(d3.easeQuadOut)
+          .attr('stroke-dashoffset', 0);
+      });
+
+    // ── Arlington pulsing beacon ──
+    const ap = proj(ARLINGTON);
+    if (ap && !isNaN(ap[0])) {
+      // Three staggered pulse rings
+      ['pulse-ring','pulse-ring pulse-ring-2','pulse-ring pulse-ring-3'].forEach(cls => {
+        svg.append('circle')
+          .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 5)
+          .attr('fill','none').attr('stroke','rgba(201,169,110,0.55)').attr('stroke-width',1)
+          .attr('class', cls).attr('pointer-events','none');
+      });
+      // Solid gold dot
+      svg.append('circle')
+        .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 4.5)
+        .attr('fill','#c9a96e').attr('stroke','#080808').attr('stroke-width',1.5)
+        .attr('pointer-events','none');
+      // Label
+      const fs = Math.max(7, W / 125);
+      svg.append('text')
+        .attr('x', ap[0]).attr('y', ap[1] - 9)
+        .attr('text-anchor','middle').attr('font-size', fs)
+        .attr('font-family',"'Syne',system-ui,sans-serif").attr('font-weight','700')
+        .attr('fill','#ffffff').attr('pointer-events','none')
+        .text('🇺🇸 Arlington, VA');
+    }
+
+    // Country labels — China & UAE only (USA label via Arlington beacon)
+    [{id:156, name:'🇨🇳 China', ox:0, oy:-6},
+     {id:784, name:'🇦🇪 UAE',   ox:0, oy:-6}]
+      .forEach(({id, name, ox, oy}) => {
+        const feat = countries.features.find(f => +f.id === id);
+        if (!feat) return;
         const c = pathGen.centroid(feat);
-        if(!c||isNaN(c[0])) return;
-        svg.append('text').attr('x',c[0]+ox).attr('y',c[1]+oy)
-          .attr('text-anchor','middle').attr('font-size',Math.max(8,W/110))
+        if (!c || isNaN(c[0])) return;
+        svg.append('text')
+          .attr('x', c[0]+ox).attr('y', c[1]+oy)
+          .attr('text-anchor','middle').attr('font-size', Math.max(8, W/110))
           .attr('font-family',"'Syne',system-ui,sans-serif").attr('font-weight','600')
-          .attr('fill','rgba(245,242,238,0.85)').attr('pointer-events','none').text(name);
+          .attr('fill','rgba(245,242,238,0.85)').attr('pointer-events','none')
+          .text(name);
       });
   }
   initD3Map();
@@ -1065,8 +1197,8 @@
     });
   });
 
-  // ── Contact form (mailto fallback — replace with EmailJS for real sending) ──
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
+  // ── Contact form — Formspree ──
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name  = document.getElementById('cf-name').value.trim();
     const email = document.getElementById('cf-email').value.trim();
@@ -1077,23 +1209,38 @@
     btn.disabled = true;
     btn.textContent = lang === 'en' ? 'Sending…' : '发送中…';
 
-    // Mailto fallback (works without backend)
-    const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-    const body    = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}`);
-    window.location.href = `mailto:vincie.pan@gmail.com?subject=${subject}&body=${body}`;
+    try {
+      const res = await fetch('https://formspree.io/f/xaqljzvg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ from_name: name, reply_to: email, message: msg })
+      });
 
-    setTimeout(() => {
-      btn.textContent = lang === 'en' ? 'Message Sent ✓' : '已发送 ✓';
-      btn.style.background = '#2a5f2a';
+      if (res.ok) {
+        btn.textContent = lang === 'en' ? 'Message Sent ✓' : '已发送 ✓';
+        btn.style.background = '#2a5f2a';
+        btn.style.color = '#fff';
+        this.reset();
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = lang === 'en' ? 'Send Message →' : '发送留言 →';
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 4000);
+      } else {
+        throw new Error('Network response not ok');
+      }
+    } catch(err) {
+      btn.disabled = false;
+      btn.textContent = lang === 'en' ? 'Failed — try again' : '发送失败，请重试';
+      btn.style.background = '#7a1a1a';
       btn.style.color = '#fff';
       setTimeout(() => {
-        btn.disabled = false;
         btn.textContent = lang === 'en' ? 'Send Message →' : '发送留言 →';
         btn.style.background = '';
         btn.style.color = '';
-        this.reset();
       }, 3000);
-    }, 500);
+    }
   });
 </script>
 </body>
