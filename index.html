@@ -302,41 +302,81 @@
   .pulse-ring-2 { animation-delay:0.7s; }
   .pulse-ring-3 { animation-delay:1.4s; }
 
-  /* TRAVEL NOTES OVERLAY */
-  .tnotes-overlay { position:fixed;inset:0;z-index:2000;background:var(--black);transform:translateY(100%);transition:transform 0.48s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;overscroll-behavior:contain; }
+  /* ── TRAVEL NOTES OVERLAY — Vogue Editorial ── */
+  .tnotes-overlay { position:fixed;inset:0;z-index:2000;background:#050505;transform:translateY(100%);transition:transform 0.52s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;overscroll-behavior:contain; }
   .tnotes-overlay.open { transform:translateY(0); }
-  .tnotes-head { position:sticky;top:0;z-index:10;background:rgba(8,8,8,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gold-border);padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap; }
-  .tnotes-head-left { display:flex;align-items:center;gap:24px;flex-wrap:wrap; }
-  .tnotes-head-title { font-family:'DM Serif Display',serif;font-size:18px; }
-  .tnotes-head-title span { color:var(--gold);font-style:italic; }
-  .tnotes-filters { display:flex;gap:6px;flex-wrap:wrap; }
-  .filter-pill { font-size:10px;padding:4px 12px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);cursor:pointer;transition:all 0.2s;font-family:'Syne',sans-serif;letter-spacing:0.08em; }
-  .filter-pill:hover,.filter-pill.active { border-color:var(--gold);color:var(--gold); }
-  .tnotes-close { background:none;border:1px solid var(--gold-border);color:var(--text-muted);width:36px;height:36px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0; }
+
+  /* Sticky nav bar */
+  .tnotes-head { position:sticky;top:0;z-index:10;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--gold-border);padding:12px 48px;display:flex;align-items:center;justify-content:space-between;gap:12px; }
+  .tnotes-close { background:none;border:1px solid var(--gold-border);color:var(--text-muted);width:34px;height:34px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;letter-spacing:0; }
   .tnotes-close:hover { border-color:var(--gold);color:var(--gold); }
-  .tnotes-body { padding:32px 40px; }
-  .tnotes-grid { columns:3 280px;column-gap:12px; }
-  .tcard { break-inside:avoid;margin-bottom:12px;background:#111;border:1px solid rgba(255,255,255,0.06);overflow:hidden;transition:border-color 0.3s,transform 0.3s;display:inline-block;width:100%; }
-  .tcard:hover { border-color:var(--gold-border);transform:translateY(-4px); }
-  .tcard-img { height:155px;position:relative;overflow:hidden;display:flex;align-items:flex-end; }
-  .tcard-img.tall { height:200px; }
-  .tcard-bg-icon { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:64px;opacity:0.14; }
-  .tcard-flag { position:absolute;top:12px;left:12px;font-size:21px;line-height:1; }
-  .tcard-loc-bar { position:relative;z-index:1;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.72),transparent);padding:24px 14px 9px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.65); }
-  .tcard-body { padding:14px; }
-  .tcard-title { font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:6px;line-height:1.35; }
-  .tcard-tags { display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px; }
-  .tcard-tag { font-size:10px;padding:2px 8px;background:rgba(201,169,110,0.08);border:1px solid var(--gold-border);color:var(--gold);letter-spacing:0.06em; }
-  .tcard-excerpt { font-size:12px;color:var(--text-muted);line-height:1.65; }
-  .tnotes-footer { text-align:center;padding:24px 0 48px;font-size:13px;color:var(--text-muted); }
-  .tnotes-footer a { color:var(--gold);text-decoration:none; }
+  .tnotes-head-wordmark { font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted); }
+
+  /* Magazine masthead */
+  .tnotes-masthead { text-align:center;padding:56px 48px 0;border-bottom:1px solid var(--gold-border); }
+  .tnotes-masthead-eyebrow { font-size:9px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:20px; }
+  .tnotes-masthead-title { font-family:'DM Serif Display',serif;font-size:clamp(52px,8vw,96px);line-height:0.88;letter-spacing:-0.02em;color:var(--white);margin-bottom:20px; }
+  .tnotes-masthead-title em { color:var(--gold);font-style:italic; }
+  .tnotes-masthead-rule { width:48px;height:1px;background:var(--gold);opacity:0.5;margin:0 auto 18px; }
+  .tnotes-masthead-sub { font-size:9px;letter-spacing:0.35em;color:var(--text-muted);text-transform:uppercase;padding-bottom:32px; }
+
+  /* Filter tabs — editorial style */
+  .tnotes-tabs { display:flex;justify-content:center;gap:0;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:0; }
+  .filter-tab { font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;padding:14px 20px;cursor:pointer;font-family:'Syne',sans-serif;transition:all 0.2s;margin-bottom:-1px; }
+  .filter-tab:hover { color:var(--white); }
+  .filter-tab.active { color:var(--gold);border-bottom-color:var(--gold); }
+
+  /* Body */
+  .tnotes-body { padding:0 48px 48px; }
+
+  /* Hero card — full-width horizontal feature */
+  .tcard-hero { display:grid;grid-template-columns:1fr 1fr;min-height:420px;border-bottom:1px solid var(--gold-border);margin-bottom:2px;cursor:default; }
+  .tcard-hero-img { position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:380px; }
+  .tcard-hero-bg-icon { font-size:120px;opacity:0.12;user-select:none; }
+  .tcard-hero-flag { position:absolute;top:24px;left:24px;font-size:28px; }
+  .tcard-hero-overlay { position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,#050505 100%); }
+  .tcard-hero-body { padding:48px 40px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--gold-border); }
+  .tcard-hero-eyebrow { font-size:9px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-bottom:20px; }
+  .tcard-hero-title { font-family:'DM Serif Display',serif;font-size:clamp(32px,3.5vw,52px);line-height:1.05;letter-spacing:-0.015em;color:var(--white);margin-bottom:20px; }
+  .tcard-hero-rule { width:32px;height:1px;background:var(--gold);opacity:0.5;margin-bottom:20px; }
+  .tcard-hero-excerpt { font-size:14px;color:#aaa;line-height:1.85;margin-bottom:24px;max-width:420px; }
+  .tcard-hero-tags { font-size:9px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase; }
+
+  /* Grid cards */
+  .tnotes-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2px; }
+  .tcard { background:#0d0d0d;overflow:hidden;cursor:default;display:flex;flex-direction:column; }
+  .tcard-img { height:220px;position:relative;overflow:hidden;flex-shrink:0; }
+  .tcard-bg-icon { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px;opacity:0.11;user-select:none; }
+  .tcard-flag { position:absolute;top:16px;left:16px;font-size:20px;line-height:1; }
+  .tcard-img-overlay { position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,0.85) 0%,rgba(5,5,5,0.1) 55%,transparent 100%); }
+  .tcard-body { padding:20px 22px 24px;flex:1;display:flex;flex-direction:column;border-top:none; }
+  .tcard-region { font-size:8.5px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;margin-bottom:10px; }
+  .tcard-title { font-family:'DM Serif Display',serif;font-size:20px;line-height:1.2;color:var(--white);margin-bottom:12px;letter-spacing:-0.01em; }
+  .tcard-rule { width:24px;height:1px;background:var(--gold);opacity:0.4;margin-bottom:12px; }
+  .tcard-excerpt { font-size:12px;color:#888;line-height:1.75;flex:1; }
+  .tcard-footer { margin-top:16px;font-size:8.5px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05); }
+
+  /* Hover state */
+  .tcard:hover .tcard-title,.tcard-hero:hover .tcard-hero-title { color:var(--gold);transition:color 0.25s; }
+
+  .tnotes-footer { text-align:center;padding:32px 0 56px;font-size:11px;letter-spacing:0.12em;color:var(--text-muted);text-transform:uppercase; }
+  .tnotes-footer a { color:var(--gold);text-decoration:none;letter-spacing:0.12em; }
   .tnotes-footer a:hover { text-decoration:underline; }
+
   @media(max-width:900px) {
     .tnotes-head,.tnotes-body { padding-left:24px;padding-right:24px; }
-    .tnotes-grid { columns:2 200px; }
+    .tnotes-masthead { padding:40px 24px 0; }
+    .tnotes-tabs { gap:0;overflow-x:auto; }
+    .filter-tab { padding:12px 14px;font-size:8px; }
+    .tcard-hero { grid-template-columns:1fr; }
+    .tcard-hero-img { min-height:240px; }
+    .tcard-hero-overlay { background:linear-gradient(to top,#050505 30%,transparent 100%); }
+    .tcard-hero-body { border-left:none;border-top:1px solid var(--gold-border);padding:28px 24px; }
+    .tnotes-grid { grid-template-columns:repeat(2,1fr); }
   }
   @media(max-width:600px) {
-    .tnotes-grid { columns:1; }
+    .tnotes-grid { grid-template-columns:1fr; }
+    .tnotes-masthead-title { font-size:clamp(40px,12vw,64px); }
   }
 
   @media (max-width:600px) {
@@ -809,24 +849,38 @@
 
 <!-- ─── TRAVEL NOTES OVERLAY ─── -->
 <div class="tnotes-overlay" id="tnotesOverlay" role="dialog" aria-modal="true" aria-label="Travel Notes">
+
+  <!-- Sticky top bar -->
   <div class="tnotes-head">
-    <div class="tnotes-head-left">
-      <div class="tnotes-head-title">Travel Notes <span>/ 旅行手账</span></div>
-      <div class="tnotes-filters">
-        <button class="filter-pill active" data-filter="all">All</button>
-        <button class="filter-pill" data-filter="china">China</button>
-        <button class="filter-pill" data-filter="middleeast">Middle East</button>
-        <button class="filter-pill" data-filter="asia">Asia</button>
-        <button class="filter-pill" data-filter="europe">Europe</button>
-        <button class="filter-pill" data-filter="americas">Americas</button>
-      </div>
-    </div>
+    <span class="tnotes-head-wordmark">Travel Diaries</span>
     <button class="tnotes-close" id="closeNotes" aria-label="Close travel notes">✕</button>
   </div>
-  <div class="tnotes-body">
-    <div class="tnotes-grid" id="tnotesGrid"></div>
+
+  <!-- Magazine masthead -->
+  <div class="tnotes-masthead">
+    <p class="tnotes-masthead-eyebrow">A Solo Traveler's Field Notes · 独行旅人手记</p>
+    <h2 class="tnotes-masthead-title">Travel<br><em>Diaries</em></h2>
+    <div class="tnotes-masthead-rule"></div>
+    <p class="tnotes-masthead-sub">40 Countries &nbsp;·&nbsp; 4 Continents &nbsp;·&nbsp; Always Solo</p>
   </div>
-  <div class="tnotes-footer">More travel stories coming soon · <a href="#contact" id="notesContact">Say hello →</a></div>
+
+  <!-- Editorial filter tabs -->
+  <div class="tnotes-tabs">
+    <button class="filter-tab active" data-filter="all">All</button>
+    <button class="filter-tab" data-filter="china">China</button>
+    <button class="filter-tab" data-filter="middleeast">Middle East</button>
+    <button class="filter-tab" data-filter="asia">Asia</button>
+    <button class="filter-tab" data-filter="europe">Europe</button>
+    <button class="filter-tab" data-filter="americas">Americas</button>
+  </div>
+
+  <div class="tnotes-body">
+    <div id="tnotesGrid"></div>
+  </div>
+
+  <div class="tnotes-footer">
+    More chapters coming soon &nbsp;·&nbsp; <a href="#contact" id="notesContact">Say hello →</a>
+  </div>
 </div>
 
 <!-- ─── FOOTER ─── -->
@@ -1113,37 +1167,68 @@
   initD3Map();
 
   // ── Travel Notes Journal ──
+  // Photos: Unsplash (free licence). Replace src with your own photos later.
+  const UNSPLASH = 'https://images.unsplash.com/';
   const journalData = [
-    {id:'shenzhen',region:'china',flag:'🇨🇳',icon:'🏙️',tall:false,gradient:'linear-gradient(135deg,#c0392b 0%,#6b1a1a 100%)',
-      en:{loc:'Shenzhen, China',title:'Where It All Began',tags:['E-Commerce','Tech City','Career Start'],excerpt:"China's Silicon Valley — where I built my foundation in cross-border e-commerce, managing operations across Alibaba, Amazon, Shopee, and more."},
-      zh:{loc:'中国 深圳',title:'一切开始的地方',tags:['跨境电商','科技城市','职业起点'],excerpt:'中国的硅谷，职业生涯的起点。在这里深耕跨境电商运营，操盘阿里巴巴、亚马逊、Shopee等全球平台。'}},
-    {id:'hangzhou',region:'china',flag:'🇨🇳',icon:'🌿',tall:true,gradient:'linear-gradient(135deg,#2c8a4a 0%,#1a5c30 100%)',
-      en:{loc:'Hangzhou, China',title:'University & Tea Hills',tags:['University','Nature','Culture'],excerpt:"Four years at Zhejiang A&F University, where bamboo forests meet tech ambition. Where I learned to think in systems — and fell in love with long-term thinking."},
-      zh:{loc:'中国 杭州',title:'大学岁月与茶香山间',tags:['大学生活','自然','文化'],excerpt:'浙江农林大学四年，竹林与科技梦想交织。在这里学会系统思考，也爱上了长远布局。'}},
-    {id:'abudhabi',region:'middleeast',flag:'🇦🇪',icon:'🏜️',tall:true,gradient:'linear-gradient(135deg,#c9a96e 0%,#7c4000 100%)',
-      en:{loc:'Abu Dhabi, UAE',title:'4.5 Years in the Desert',tags:['Work Base','Cloud Ops','$6M Monthly'],excerpt:"My longest chapter abroad. Managed cloud operations for UAE government & enterprise — $6M/mo steady revenue, 95% CSAT, and countless sunsets from SKY Tower."},
-      zh:{loc:'阿联酋 阿布扎比',title:'沙漠里的4.5年',tags:['工作基地','云运营','月流水600万'],excerpt:'最长的异乡岁月。负责阿联酋政企云运营，月流水稳定600万美元，客户满意度95%，还有SKY Tower无数个橙色夕阳。'}},
-    {id:'dubai',region:'middleeast',flag:'🇦🇪',icon:'🌆',tall:false,gradient:'linear-gradient(135deg,#1a3a5c 0%,#0d2035 100%)',
-      en:{loc:'Dubai, UAE',title:'City of Impossible Heights',tags:['Architecture','Business','Lifestyle'],excerpt:"30 min from Abu Dhabi, a world apart. Burj Khalifa, the floating Gold Souk, and the fastest-growing business hub on Earth."},
-      zh:{loc:'阿联酋 迪拜',title:'不可能之高的城市',tags:['建筑','商业','生活方式'],excerpt:'距阿布扎比仅30分钟，却是截然不同的世界。哈利法塔、黄金市场，以及全球发展最快的商业中心。'}},
-    {id:'usa',region:'americas',flag:'🇺🇸',icon:'🎓',tall:false,gradient:'linear-gradient(135deg,#1e3a8a 0%,#1e1b4b 100%)',
-      en:{loc:'United States',title:'New Chapter: Grad School',tags:['F1 Visa','MS Student','Data Analytics'],excerpt:"From Middle East cloud ops to American classrooms. Pursuing M.S. in Management Science & Data Analytics — merging enterprise experience with advanced analytics."},
-      zh:{loc:'美国',title:'新篇章：研究生求学路',tags:['F1学签','硕士在读','数据分析'],excerpt:'从中东云运营到美国课堂。攻读管理科学与数据分析硕士，将企业经验与高级数据分析相融合。'}},
-    {id:'riyadh',region:'middleeast',flag:'🇸🇦',icon:'🏛️',tall:true,gradient:'linear-gradient(135deg,#1e5c2e 0%,#0f2d17 100%)',
-      en:{loc:'Riyadh, Saudi Arabia',title:'Vision 2030 in Motion',tags:['Business','Transformation','Enterprise'],excerpt:"Watching Saudi Arabia rewrite its own story at breakneck speed is extraordinary. The scale of transformation I witnessed firsthand — unforgettable."},
-      zh:{loc:'沙特阿拉伯 利雅得',title:'2030愿景进行时',tags:['商业','数字转型','政企'],excerpt:'亲眼见证沙特以前所未有的速度重写自己的故事。这种规模的变革，终生难忘。'}},
-    {id:'tokyo',region:'asia',flag:'🇯🇵',icon:'⛩️',tall:true,gradient:'linear-gradient(135deg,#c0392b 0%,#2c2c2c 100%)',
-      en:{loc:'Tokyo, Japan',title:'Precision Meets Soul',tags:['Culture','Food','Architecture'],excerpt:"Japan taught me that perfection is a process. Shinjuku at midnight, ramen at 2am, Senso-ji at dawn — every hour a different city."},
-      zh:{loc:'日本 东京',title:'精密与灵魂的交汇',tags:['文化','美食','建筑'],excerpt:'日本教会我：完美是一个持续的过程。午夜的新宿，凌晨两点的拉面，黎明的浅草寺——每个时辰都是不同的城市。'}},
-    {id:'singapore',region:'asia',flag:'🇸🇬',icon:'🌴',tall:false,gradient:'linear-gradient(135deg,#0f5c45 0%,#0a3d2e 100%)',
-      en:{loc:'Singapore',title:"Asia's Smartest Crossroads",tags:['Business Hub','Multicultural','Efficiency'],excerpt:"A city-state punching above its weight in every way — business, food, engineering, diversity. Every visit is a reminder of what's possible."},
-      zh:{loc:'新加坡',title:'亚洲最聪明的十字路口',tags:['商业中心','多元文化','高效'],excerpt:'这个城市国家在商业、美食、工程和多元性上远超其体量。每次到访都提醒我——一切皆有可能。'}},
-    {id:'istanbul',region:'europe',flag:'🇹🇷',icon:'🕌',tall:false,gradient:'linear-gradient(135deg,#6b2d8b 0%,#2d1547 100%)',
-      en:{loc:'Istanbul, Turkey',title:'Two Continents, One City',tags:['History','Bosphorus','East-West'],excerpt:"Straddling Europe and Asia, Istanbul proves the world's most interesting places exist at intersections — geographic, cultural, historical."},
-      zh:{loc:'土耳其 伊斯坦布尔',title:'两大洲，一座城',tags:['历史','博斯普鲁斯','东西方'],excerpt:'横跨欧亚大陆，伊斯坦布尔证明了：世界上最有趣的地方永远诞生于交汇点——地理的、文化的、历史的。'}},
-    {id:'paris',region:'europe',flag:'🇫🇷',icon:'🗼',tall:false,gradient:'linear-gradient(135deg,#4a3728 0%,#2d1f17 100%)',
-      en:{loc:'Paris, France',title:'Always Worth the Cliché',tags:['Art','Architecture','Gastronomy'],excerpt:"Every arrondissement tells a different story. The clichés exist because they're true — Paris is relentlessly, stubbornly beautiful."},
-      zh:{loc:'法国 巴黎',title:'陈词滥调，但永远值得',tags:['艺术','建筑','美食'],excerpt:'每个街区都是一个不同的故事。陈词滥调之所以存在，是因为它们是真的——巴黎固执地美丽着。'}}
+    {id:'shenzhen', region:'china',     flag:'🇨🇳', icon:'🏙️',
+     photo: UNSPLASH+'photo-1558618666-fcd25c85cd64?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(192,57,43,0.72),rgba(107,26,26,0.85))',
+     en:{loc:'Shenzhen, China',       title:'Where It All Began',         tags:['E-Commerce','Tech City','Career Start'],   excerpt:"China's Silicon Valley — where I built my foundation in cross-border e-commerce, managing operations across Alibaba, Amazon, Shopee, and more."},
+     zh:{loc:'中国 深圳',             title:'一切开始的地方',             tags:['跨境电商','科技城市','职业起点'],           excerpt:'中国的硅谷，职业生涯的起点。在这里深耕跨境电商运营，操盘阿里巴巴、亚马逊、Shopee等全球平台。'}},
+
+    {id:'hangzhou', region:'china',    flag:'🇨🇳', icon:'🌿',
+     photo: UNSPLASH+'photo-1547981609-4b9c7b4d1c5a?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(44,138,74,0.72),rgba(26,92,48,0.88))',
+     en:{loc:'Hangzhou, China',       title:'University & Tea Hills',      tags:['University','Nature','Culture'],           excerpt:"Four years at Zhejiang A&F University, where bamboo forests meet tech ambition. Where I learned to think in systems — and fell in love with long-term thinking."},
+     zh:{loc:'中国 杭州',             title:'大学岁月与茶香山间',         tags:['大学生活','自然','文化'],                   excerpt:'浙江农林大学四年，竹林与科技梦想交织。在这里学会系统思考，也爱上了长远布局。'}},
+
+    {id:'abudhabi', region:'middleeast', flag:'🇦🇪', icon:'🏜️',
+     photo: UNSPLASH+'photo-1512632578888-169bbbc64f33?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(201,169,110,0.65),rgba(124,64,0,0.88))',
+     en:{loc:'Abu Dhabi, UAE',        title:'4.5 Years in the Desert',     tags:['Work Base','Cloud Ops','$6M Monthly'],     excerpt:"My longest chapter abroad. Managed cloud operations for UAE government & enterprise — $6M/mo steady revenue, 95% CSAT, and countless sunsets from SKY Tower."},
+     zh:{loc:'阿联酋 阿布扎比',       title:'沙漠里的4.5年',              tags:['工作基地','云运营','月流水600万'],          excerpt:'最长的异乡岁月。负责阿联酋政企云运营，月流水稳定600万美元，客户满意度95%，还有SKY Tower无数个橙色夕阳。'}},
+
+    {id:'dubai',    region:'middleeast', flag:'🇦🇪', icon:'🌆',
+     photo: UNSPLASH+'photo-1512453979798-5ea266f8880c?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(26,58,92,0.72),rgba(13,32,53,0.88))',
+     en:{loc:'Dubai, UAE',            title:'City of Impossible Heights',  tags:['Architecture','Business','Lifestyle'],      excerpt:"30 min from Abu Dhabi, a world apart. Burj Khalifa, the floating Gold Souk, and the fastest-growing business hub on Earth."},
+     zh:{loc:'阿联酋 迪拜',           title:'不可能之高的城市',            tags:['建筑','商业','生活方式'],                   excerpt:'距阿布扎比仅30分钟，却是截然不同的世界。哈利法塔、黄金市场，以及全球发展最快的商业中心。'}},
+
+    {id:'usa',      region:'americas',  flag:'🇺🇸', icon:'🎓',
+     photo: UNSPLASH+'photo-1501466044931-62695aada8e9?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(30,58,138,0.72),rgba(30,27,75,0.88))',
+     en:{loc:'Virginia, United States', title:'New Chapter: Grad School',  tags:['F1 Visa','MS Student','Data Analytics'],   excerpt:"From Middle East cloud ops to American classrooms. Pursuing M.S. in Management Science & Data Analytics — merging enterprise experience with advanced analytics."},
+     zh:{loc:'美国 弗吉尼亚',          title:'新篇章：研究生求学路',       tags:['F1学签','硕士在读','数据分析'],             excerpt:'从中东云运营到美国课堂。攻读管理科学与数据分析硕士，将企业经验与高级数据分析相融合。'}},
+
+    {id:'riyadh',   region:'middleeast', flag:'🇸🇦', icon:'🏛️',
+     photo: UNSPLASH+'photo-1586724237569-f3d0c1dee8c6?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(30,92,46,0.72),rgba(15,45,23,0.88))',
+     en:{loc:'Riyadh, Saudi Arabia',  title:'Vision 2030 in Motion',       tags:['Business','Transformation','Enterprise'],  excerpt:"Watching Saudi Arabia rewrite its own story at breakneck speed is extraordinary. The scale of transformation I witnessed firsthand — unforgettable."},
+     zh:{loc:'沙特阿拉伯 利雅得',     title:'2030愿景进行时',              tags:['商业','数字转型','政企'],                   excerpt:'亲眼见证沙特以前所未有的速度重写自己的故事。这种规模的变革，终生难忘。'}},
+
+    {id:'tokyo',    region:'asia',      flag:'🇯🇵', icon:'⛩️',
+     photo: UNSPLASH+'photo-1540959733332-eab4deabeeaf?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(192,57,43,0.68),rgba(44,44,44,0.88))',
+     en:{loc:'Tokyo, Japan',           title:'Precision Meets Soul',        tags:['Culture','Food','Architecture'],            excerpt:"Japan taught me that perfection is a process. Shinjuku at midnight, ramen at 2am, Senso-ji at dawn — every hour a different city."},
+     zh:{loc:'日本 东京',              title:'精密与灵魂的交汇',            tags:['文化','美食','建筑'],                       excerpt:'日本教会我：完美是一个持续的过程。午夜的新宿，凌晨两点的拉面，黎明的浅草寺——每个时辰都是不同的城市。'}},
+
+    {id:'singapore', region:'asia',    flag:'🇸🇬', icon:'🌴',
+     photo: UNSPLASH+'photo-1525625293386-3f8f99389edd?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(15,92,69,0.68),rgba(10,61,46,0.88))',
+     en:{loc:'Singapore',              title:"Asia's Smartest Crossroads",  tags:['Business Hub','Multicultural','Efficiency'], excerpt:"A city-state punching above its weight in every way — business, food, engineering, diversity. Every visit is a reminder of what's possible."},
+     zh:{loc:'新加坡',                 title:'亚洲最聪明的十字路口',        tags:['商业中心','多元文化','高效'],               excerpt:'这个城市国家在商业、美食、工程和多元性上远超其体量。每次到访都提醒我——一切皆有可能。'}},
+
+    {id:'istanbul', region:'europe',   flag:'🇹🇷', icon:'🕌',
+     photo: UNSPLASH+'photo-1524231757912-21f4fe3a7200?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(107,45,139,0.68),rgba(45,21,71,0.88))',
+     en:{loc:'Istanbul, Turkey',       title:'Two Continents, One City',    tags:['History','Bosphorus','East-West'],          excerpt:"Straddling Europe and Asia, Istanbul proves the world's most interesting places exist at intersections — geographic, cultural, historical."},
+     zh:{loc:'土耳其 伊斯坦布尔',      title:'两大洲，一座城',              tags:['历史','博斯普鲁斯','东西方'],               excerpt:'横跨欧亚大陆，伊斯坦布尔证明了：世界上最有趣的地方永远诞生于交汇点——地理的、文化的、历史的。'}},
+
+    {id:'paris',    region:'europe',   flag:'🇫🇷', icon:'🗼',
+     photo: UNSPLASH+'photo-1502602898657-3e91760cbb34?w=900&q=80',
+     gradient:'linear-gradient(135deg,rgba(74,55,40,0.68),rgba(45,31,23,0.88))',
+     en:{loc:'Paris, France',          title:'Always Worth the Cliché',     tags:['Art','Architecture','Gastronomy'],          excerpt:"Every arrondissement tells a different story. The clichés exist because they're true — Paris is relentlessly, stubbornly beautiful."},
+     zh:{loc:'法国 巴黎',              title:'陈词滥调，但永远值得',        tags:['艺术','建筑','美食'],                       excerpt:'每个街区都是一个不同的故事。陈词滥调之所以存在，是因为它们是真的——巴黎固执地美丽着。'}}
   ];
 
   let notesOpen = false;
@@ -1153,23 +1238,56 @@
     if (!grid) return;
     const list = filter === 'all' ? journalData : journalData.filter(d => d.region === filter);
     grid.innerHTML = '';
-    list.forEach(entry => {
-      const d = entry[lang] || entry['en'];
+    if (!list.length) return;
+
+    const showAll = filter === 'all';
+
+    // ── Hero card (first / featured entry) ──
+    if (showAll) {
+      const hero  = journalData.find(e => e.id === 'abudhabi') || list[0];
+      const d     = hero[lang] || hero['en'];
+      const heroEl = document.createElement('div');
+      heroEl.className = 'tcard-hero';
+      heroEl.innerHTML = `
+        <div class="tcard-hero-img" style="background:linear-gradient(to right,rgba(0,0,0,0.35),rgba(0,0,0,0.55)),url('${hero.photo}') center/cover no-repeat;background-color:#111">
+          <div class="tcard-hero-bg-icon" aria-hidden="true">${hero.icon}</div>
+          <div class="tcard-hero-flag"    aria-hidden="true">${hero.flag}</div>
+          <div class="tcard-hero-overlay"></div>
+        </div>
+        <div class="tcard-hero-body">
+          <div class="tcard-hero-eyebrow">Featured &nbsp;·&nbsp; ${d.loc}</div>
+          <h3 class="tcard-hero-title">${d.title}</h3>
+          <div class="tcard-hero-rule"></div>
+          <p class="tcard-hero-excerpt">${d.excerpt}</p>
+          <div class="tcard-hero-tags">${d.tags.join(' &nbsp;·&nbsp; ')}</div>
+        </div>`;
+      grid.appendChild(heroEl);
+    }
+
+    // ── Grid cards ──
+    const gridWrap = document.createElement('div');
+    gridWrap.className = 'tnotes-grid';
+    const gridList = showAll ? list.filter(e => e.id !== 'abudhabi') : list;
+    gridList.forEach(entry => {
+      const d    = entry[lang] || entry['en'];
       const card = document.createElement('div');
       card.className = 'tcard';
       card.innerHTML = `
-        <div class="tcard-img${entry.tall?' tall':''}" style="background:${entry.gradient}">
-          <div class="tcard-bg-icon" aria-hidden="true">${entry.icon}</div>
-          <div class="tcard-flag" aria-hidden="true">${entry.flag}</div>
-          <div class="tcard-loc-bar">${d.loc}</div>
+        <div class="tcard-img" style="background:linear-gradient(rgba(0,0,0,0.42),rgba(0,0,0,0.52)),url('${entry.photo}') center/cover no-repeat;background-color:#111">
+          <div class="tcard-bg-icon"  aria-hidden="true">${entry.icon}</div>
+          <div class="tcard-flag"     aria-hidden="true">${entry.flag}</div>
+          <div class="tcard-img-overlay"></div>
         </div>
         <div class="tcard-body">
+          <div class="tcard-region">${d.loc}</div>
           <div class="tcard-title">${d.title}</div>
-          <div class="tcard-tags">${d.tags.map(t=>`<span class="tcard-tag">${t}</span>`).join('')}</div>
+          <div class="tcard-rule"></div>
           <div class="tcard-excerpt">${d.excerpt}</div>
+          <div class="tcard-footer">${d.tags.join(' · ')}</div>
         </div>`;
-      grid.appendChild(card);
+      gridWrap.appendChild(card);
     });
+    grid.appendChild(gridWrap);
   }
 
   document.getElementById('openNotes').addEventListener('click', () => {
@@ -1177,7 +1295,7 @@
     document.body.style.overflow = 'hidden';
     notesOpen = true;
     renderJournal('all');
-    document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p.dataset.filter === 'all'));
+    document.querySelectorAll('.filter-tab').forEach(p => p.classList.toggle('active', p.dataset.filter === 'all'));
   });
 
   document.getElementById('closeNotes').addEventListener('click', closeNotes);
@@ -1189,11 +1307,11 @@
     notesOpen = false;
   }
 
-  document.querySelectorAll('.filter-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      renderJournal(pill.dataset.filter);
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderJournal(tab.dataset.filter);
     });
   });
 
