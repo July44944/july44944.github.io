@@ -228,6 +228,14 @@
   .social-btn { width:44px;height:44px;border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text-muted);font-size:12px;font-weight:700;transition:all 0.2s; }
   .social-btn:hover { background:var(--gold);color:var(--black);border-color:var(--gold); }
   .social-btn[aria-disabled="true"] { opacity:0.45;pointer-events:none; }
+  .ig-modal-overlay { position:fixed;inset:0;z-index:3000;background:rgba(5,5,5,0.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s ease; }
+  .ig-modal-overlay.active { opacity:1;pointer-events:auto; }
+  .ig-modal { position:relative;background:var(--black);border:1px solid var(--gold-border);padding:32px;max-width:300px;width:88%;text-align:center;transform:translateY(12px);transition:transform 0.25s ease; }
+  .ig-modal-overlay.active .ig-modal { transform:translateY(0); }
+  .ig-modal-img { width:100%;display:block;border-radius:6px; }
+  .ig-modal-handle { display:inline-block;margin-top:18px;color:var(--gold);text-decoration:none;letter-spacing:0.08em;font-size:13px; }
+  .ig-modal-close { position:absolute;top:-38px;right:0;background:none;border:none;color:var(--text-muted);font-size:26px;line-height:1;cursor:pointer;padding:4px; }
+  .ig-modal-close:hover { color:var(--gold); }
   .contact-form { display:flex;flex-direction:column;gap:16px; }
   .form-group { display:flex;flex-direction:column;gap:8px; }
   .form-label { font-size:10px;letter-spacing:0.18em;color:var(--text-muted);text-transform:uppercase; }
@@ -291,16 +299,25 @@
   .travel-desc-text { font-size:14px;color:var(--text-muted);line-height:1.8;max-width:700px;margin-top:8px; }
   /* Arc pulse animation */
   @keyframes map-pulse-scale {
-    0%   { transform:scale(1);   opacity:0.7; }
-    100% { transform:scale(4.5); opacity:0;   }
+    0%   { transform:scale(1);   opacity:0.95; }
+    100% { transform:scale(6.5); opacity:0;    }
   }
   .pulse-ring {
     transform-box:fill-box;
     transform-origin:center;
-    animation:map-pulse-scale 2.2s ease-out infinite;
+    animation:map-pulse-scale 1.7s ease-out infinite;
   }
-  .pulse-ring-2 { animation-delay:0.7s; }
-  .pulse-ring-3 { animation-delay:1.4s; }
+  .pulse-ring-2 { animation-delay:0.55s; }
+  .pulse-ring-3 { animation-delay:1.1s; }
+  @keyframes beacon-glow-breathe {
+    0%,100% { opacity:0.3;  transform:scale(1);   }
+    50%     { opacity:0.65; transform:scale(1.35); }
+  }
+  .beacon-glow {
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:beacon-glow-breathe 2.2s ease-in-out infinite;
+  }
 
   /* ── TRAVEL NOTES OVERLAY — Vogue Editorial ── */
   .tnotes-overlay { position:fixed;inset:0;z-index:2000;background:#050505;transform:translateY(100%);transition:transform 0.52s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;overscroll-behavior:contain; }
@@ -822,7 +839,7 @@
         <div class="social-row">
           <a href="#" class="social-btn" aria-label="LinkedIn (coming soon)" aria-disabled="true" title="LinkedIn">in</a>
           <a href="#" class="social-btn" aria-label="GitHub (coming soon)"   aria-disabled="true" title="GitHub">gh</a>
-          <a href="#" class="social-btn" aria-label="Instagram (coming soon)" aria-disabled="true" title="Instagram">ig</a>
+          <a href="#" class="social-btn" id="igOpenBtn" aria-label="Instagram" title="Instagram">ig</a>
           <a href="resume.pdf" class="social-btn" aria-label="Download Resume" title="Download Resume" download>↓</a>
         </div>
       </div>
@@ -846,6 +863,15 @@
     </div>
   </div>
 </section>
+
+<!-- ─── INSTAGRAM QR MODAL ─── -->
+<div class="ig-modal-overlay" id="igModalOverlay" role="dialog" aria-modal="true" aria-label="Instagram QR Code">
+  <div class="ig-modal">
+    <button class="ig-modal-close" id="igModalClose" aria-label="Close">&times;</button>
+    <img src="ins.jpg" alt="Instagram QR code for @kaka251203" class="ig-modal-img">
+    <a href="https://instagram.com/kaka251203" target="_blank" rel="noopener" class="ig-modal-handle">@kaka251203</a>
+  </div>
+</div>
 
 <!-- ─── TRAVEL NOTES OVERLAY ─── -->
 <div class="tnotes-overlay" id="tnotesOverlay" role="dialog" aria-modal="true" aria-label="Travel Notes">
@@ -1126,17 +1152,22 @@
     // ── Arlington pulsing beacon ──
     const ap = proj(ARLINGTON);
     if (ap && !isNaN(ap[0])) {
+      // Soft ambient glow halo (slow breathing, sits beneath everything)
+      svg.append('circle')
+        .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 17)
+        .attr('fill','#f0c060').attr('class','beacon-glow').attr('pointer-events','none')
+        .style('filter','blur(10px)');
       // Three staggered pulse rings
       ['pulse-ring','pulse-ring pulse-ring-2','pulse-ring pulse-ring-3'].forEach(cls => {
         svg.append('circle')
-          .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 5)
-          .attr('fill','none').attr('stroke','rgba(201,169,110,0.55)').attr('stroke-width',1)
+          .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 6)
+          .attr('fill','none').attr('stroke','rgba(255,206,110,0.9)').attr('stroke-width',1.8)
           .attr('class', cls).attr('pointer-events','none');
       });
       // Solid gold dot
       svg.append('circle')
-        .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 4.5)
-        .attr('fill','#c9a96e').attr('stroke','#080808').attr('stroke-width',1.5)
+        .attr('cx', ap[0]).attr('cy', ap[1]).attr('r', 5.5)
+        .attr('fill','#ffd27a').attr('stroke','#080808').attr('stroke-width',1.5)
         .attr('pointer-events','none');
       // Label
       const fs = Math.max(7, W / 125);
@@ -1177,7 +1208,7 @@
      zh:{loc:'中国 深圳',             title:'一切开始的地方',             tags:['跨境电商','科技城市','职业起点'],           excerpt:'中国的硅谷，职业生涯的起点。在这里深耕跨境电商运营，操盘阿里巴巴、亚马逊、Shopee等全球平台。'}},
 
     {id:'hangzhou', region:'china',    flag:'🇨🇳', icon:'🌿',
-     photo: UNSPLASH+'photo-1547981609-4b9c7b4d1c5a?w=900&q=80',
+     photo: 'hangzhou-lingyin-temple.jpg',
      gradient:'linear-gradient(135deg,rgba(44,138,74,0.72),rgba(26,92,48,0.88))',
      en:{loc:'Hangzhou, China',       title:'University & Tea Hills',      tags:['University','Nature','Culture'],           excerpt:"Four years at Zhejiang A&F University, where bamboo forests meet tech ambition. Where I learned to think in systems — and fell in love with long-term thinking."},
      zh:{loc:'中国 杭州',             title:'大学岁月与茶香山间',         tags:['大学生活','自然','文化'],                   excerpt:'浙江农林大学四年，竹林与科技梦想交织。在这里学会系统思考，也爱上了长远布局。'}},
@@ -1289,6 +1320,18 @@
     });
     grid.appendChild(gridWrap);
   }
+
+  const igOpenBtn    = document.getElementById('igOpenBtn');
+  const igModal      = document.getElementById('igModalOverlay');
+  const igModalClose = document.getElementById('igModalClose');
+  igOpenBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    igModal.classList.add('active');
+  });
+  const closeIgModal = () => igModal.classList.remove('active');
+  igModalClose.addEventListener('click', closeIgModal);
+  igModal.addEventListener('click', (e) => { if (e.target === igModal) closeIgModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeIgModal(); });
 
   document.getElementById('openNotes').addEventListener('click', () => {
     document.getElementById('tnotesOverlay').classList.add('open');
