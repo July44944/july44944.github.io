@@ -159,6 +159,42 @@
   .cert-card-name { font-family:'DM Serif Display',serif;font-size:17px;line-height:1.3;color:var(--white);margin-bottom:8px; }
   .cert-card-sub { font-size:12px;color:var(--text-muted);letter-spacing:0.04em;line-height:1.65; }
 
+  /* BUILDS */
+  #builds { background:var(--gray-light); }
+  .builds-intro { font-size:15px;color:var(--text-muted);max-width:640px;line-height:1.85;margin-bottom:56px; }
+  .builds-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:2px; }
+  .build-card { background:#111;border:1px solid transparent;transition:border-color 0.3s;display:flex;flex-direction:column;overflow:hidden; }
+  .build-card:hover { border-color:var(--gold-border); }
+  .build-preview { position:relative;height:200px;display:flex;flex-direction:column;flex-shrink:0;border-bottom:1px solid var(--gold-border);overflow:hidden; }
+  .build-preview-cloud   { background:linear-gradient(135deg,#141914 0%,#101c14 55%,#0d130d 100%); }
+  .build-preview-halal   { background:linear-gradient(135deg,#0e1918 0%,#0c1c1a 55%,#0a1513 100%); }
+  .build-preview::after { content:'';position:absolute;inset:35px 0 0 0;background-image:linear-gradient(rgba(201,169,110,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,169,110,0.05) 1px,transparent 1px);background-size:26px 26px;pointer-events:none; }
+  .build-preview-bar { position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0; }
+  .build-preview-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  .build-preview-dot.d-red    { background:#ff5f57; }
+  .build-preview-dot.d-yellow { background:#febc2e; }
+  .build-preview-dot.d-green  { background:#28c840; }
+  .build-preview-url { flex:1;background:rgba(255,255,255,0.05);border-radius:4px;padding:4px 10px;font-size:10px;font-family:monospace;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .build-preview-glyph { position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center; }
+  .build-preview-glyph::before,
+  .build-preview-glyph::after { content:'';position:absolute;width:66px;height:66px;border-radius:50%;border:1px solid rgba(201,169,110,0.55);animation:build-pulse-ring 2.8s ease-out infinite; }
+  .build-preview-glyph::after { animation-delay:1.4s; }
+  .build-preview-glyph svg { position:relative;filter:drop-shadow(0 0 10px rgba(201,169,110,0.45)) drop-shadow(0 0 22px rgba(201,169,110,0.2)); }
+  .build-card:hover .build-preview-glyph svg { filter:drop-shadow(0 0 14px rgba(201,169,110,0.6)) drop-shadow(0 0 30px rgba(201,169,110,0.3)); }
+  @keyframes build-pulse-ring { 0% { transform:scale(1);opacity:0.6; } 100% { transform:scale(2.8);opacity:0; } }
+  .build-body { padding:32px 36px 36px;display:flex;flex-direction:column;flex:1; }
+  .build-eyebrow { font-size:10px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:14px; }
+  .build-title { font-family:'DM Serif Display',serif;font-size:24px;color:var(--white);margin-bottom:14px;line-height:1.2; }
+  .build-desc { font-size:14px;color:var(--text-muted);line-height:1.8;margin-bottom:22px;flex:1; }
+  .build-tags { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px; }
+  .build-tag { font-size:10px;letter-spacing:0.06em;color:#999;border:1px solid rgba(255,255,255,0.1);padding:4px 10px;text-transform:uppercase; }
+  .build-actions { display:flex;gap:12px;flex-wrap:wrap; }
+  .build-btn { padding:11px 24px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;font-weight:700;transition:all 0.25s;display:inline-flex;align-items:center;gap:6px; }
+  .build-btn-primary { background:var(--gold);color:var(--black);border:1px solid var(--gold); }
+  .build-btn-primary:hover { background:transparent;color:var(--gold); }
+  .build-btn-outline { border:1px solid var(--gold-border);color:var(--text-muted); }
+  .build-btn-outline:hover { border-color:var(--gold);color:var(--gold); }
+
   /* ABOUT */
   #about { background:var(--gray-light); }
   .about-grid { display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start; }
@@ -201,8 +237,8 @@
   .travel-card-region { font-size:10px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:6px; }
   .travel-card-title { font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);line-height:1.2; }
 
-  /* PROJECTS */
-  #projects { background:var(--black); }
+  /* CAREER HIGHLIGHTS */
+  #highlights { background:var(--black); }
   .projects-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:2px; }
   .project-card { background:var(--gray-light);padding:40px;border:1px solid transparent;transition:border-color 0.3s,background 0.3s;position:relative;overflow:hidden; }
   .project-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease; }
@@ -271,6 +307,7 @@
     .about-highlights { grid-template-columns:1fr 1fr; }
     .travel-grid { grid-template-columns:1fr 1fr; }
     .projects-grid { grid-template-columns:1fr; }
+    .builds-grid { grid-template-columns:1fr; }
     .cert-grid { grid-template-columns:1fr; }
     .cert-featured { grid-template-columns:1fr;gap:20px;padding:28px 24px; }
     .cert-featured-meta { text-align:left; }
@@ -417,10 +454,11 @@
 
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Navigation menu">
   <a href="#credentials" onclick="closeMobile()" data-en="Credentials" data-zh="认证资质">Credentials</a>
+  <a href="#builds"      onclick="closeMobile()" data-en="Builds"      data-zh="自建项目">Builds</a>
   <a href="#about"       onclick="closeMobile()" data-en="About"       data-zh="关于我">About</a>
   <a href="#career"      onclick="closeMobile()" data-en="Career"      data-zh="职业经历">Career</a>
   <a href="#travel"      onclick="closeMobile()" data-en="Travel"      data-zh="旅行日记">Travel</a>
-  <a href="#projects"    onclick="closeMobile()" data-en="Projects"    data-zh="项目案例">Projects</a>
+  <a href="#highlights"  onclick="closeMobile()" data-en="Highlights"  data-zh="职业亮点">Highlights</a>
   <a href="#contact"     onclick="closeMobile()" data-en="Contact"     data-zh="联系我">Contact</a>
 </div>
 
@@ -431,10 +469,11 @@
   </a>
   <ul class="nav-links">
     <li><a href="#credentials" data-en="Credentials" data-zh="认证资质">Credentials</a></li>
+    <li><a href="#builds"      data-en="Builds"      data-zh="自建项目">Builds</a></li>
     <li><a href="#about"       data-en="About"       data-zh="关于我">About</a></li>
     <li><a href="#career"      data-en="Career"      data-zh="职业经历">Career</a></li>
     <li><a href="#travel"      data-en="Travel"      data-zh="旅行日记">Travel</a></li>
-    <li><a href="#projects"    data-en="Projects"    data-zh="项目案例">Projects</a></li>
+    <li><a href="#highlights"  data-en="Highlights"  data-zh="职业亮点">Highlights</a></li>
     <li><a href="#contact"     data-en="Contact"     data-zh="联系我">Contact</a></li>
   </ul>
   <button class="hamburger" onclick="toggleMobile()" aria-label="Open navigation menu" aria-expanded="false" id="hamburgerBtn">
@@ -581,11 +620,105 @@
   </div>
 </section>
 
+<!-- ─── BUILDS ─── -->
+<section id="builds">
+  <div class="max-container">
+    <div class="section-header fade-in">
+      <span class="section-num">02</span>
+      <div class="section-line"></div>
+      <h2 class="section-title">
+        <span data-en="Personal" data-zh="个人">Personal</span><span class="accent en-text"> Builds</span><span class="accent zh-text" style="display:none"> 项目</span>
+      </h2>
+    </div>
+    <p class="builds-intro en-text fade-in">Two live tools I scoped, designed, and shipped end-to-end with AI-assisted development — from problem framing to a deployed static site. No backend, no build step: just HTML/CSS/JS pushed straight to GitHub Pages.</p>
+    <p class="builds-intro zh-text fade-in" style="display:none">两个由我独立完成产品构思、AI辅助开发（vibe coding）并部署上线的实战工具——零后端、零构建流程，纯HTML/CSS/JS直接发布在GitHub Pages。</p>
+
+    <div class="builds-grid">
+      <div class="build-card fade-in">
+        <div class="build-preview build-preview-cloud">
+          <div class="build-preview-bar">
+            <span class="build-preview-dot d-red"></span>
+            <span class="build-preview-dot d-yellow"></span>
+            <span class="build-preview-dot d-green"></span>
+            <span class="build-preview-url">july44944.github.io/cloudcost-vincie</span>
+          </div>
+          <div class="build-preview-glyph">
+            <svg width="104" height="104" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="13" width="3.5" height="8" fill="#c9a96e" opacity="0.55"/>
+              <rect x="10.25" y="8" width="3.5" height="13" fill="#c9a96e" opacity="0.8"/>
+              <rect x="17.5" y="3" width="3.5" height="18" fill="#c9a96e"/>
+            </svg>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-eyebrow en-text">Multi-Cloud FinOps</div>
+          <div class="build-eyebrow zh-text" style="display:none">多云成本优化</div>
+          <h3 class="build-title">CloudCost Lens</h3>
+          <p class="build-desc en-text">Upload an AWS, Azure, GCP, or Huawei Cloud billing CSV and get a unified cost breakdown, trend charts, and rule-based savings suggestions — every recommendation traces back to a specific resource, never a vague tip. Entirely client-side; billing data never leaves the browser.</p>
+          <p class="build-desc zh-text" style="display:none">上传AWS/Azure/GCP/华为云账单CSV，浏览器端即时生成统一成本分解、趋势图表与基于规则的省钱建议——每条建议都精确对应具体资源，而非空泛提示。全流程本地计算，账单数据不出浏览器。</p>
+          <div class="build-tags">
+            <span class="build-tag">Vanilla JS</span>
+            <span class="build-tag">Chart.js</span>
+            <span class="build-tag">PapaParse</span>
+            <span class="build-tag">GitHub Pages</span>
+          </div>
+          <div class="build-actions">
+            <a href="https://july44944.github.io/cloudcost-vincie/" class="build-btn build-btn-primary" target="_blank" rel="noopener">
+              <span class="en-text">Live Demo →</span><span class="zh-text" style="display:none">在线体验 →</span>
+            </a>
+            <a href="https://github.com/July44944/cloudcost-vincie" class="build-btn build-btn-outline" target="_blank" rel="noopener">
+              <span class="en-text">View Source ↗</span><span class="zh-text" style="display:none">查看源码 ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="build-card fade-in">
+        <div class="build-preview build-preview-halal">
+          <div class="build-preview-bar">
+            <span class="build-preview-dot d-red"></span>
+            <span class="build-preview-dot d-yellow"></span>
+            <span class="build-preview-dot d-green"></span>
+            <span class="build-preview-url">july44944.github.io/halal-check</span>
+          </div>
+          <div class="build-preview-glyph">
+            <svg width="104" height="104" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2.5 4 5.5v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10v-6l-8-3Z" stroke="#c9a96e" stroke-width="1.3" opacity="0.9"/>
+              <path d="M8.3 12.1l2.5 2.5 5-5.2" stroke="#c9a96e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-eyebrow en-text">GCC Ingredient Risk Console</div>
+          <div class="build-eyebrow zh-text" style="display:none">海湾市场配料风险核查</div>
+          <h3 class="build-title">HalalCheck</h3>
+          <p class="build-desc en-text">Paste an ingredient list from an imported snack or sauce and get a per-ingredient halal risk flag — high / medium / unmatched — with the reasoning and the exact question to ask the supplier. Built from 4.5 years watching Abu Dhabi mini-mart owners guess at Chinese and Korean labels.</p>
+          <p class="build-desc zh-text" style="display:none">粘贴进口零食或酱料的配料表，逐项给出清真风险提示（高/中/未匹配）、判断依据及该向供应商核实的具体问题——源于在阿布扎比驻扎4.5年，亲历中韩文标签让便利店店主频频靠猜的真实场景。</p>
+          <div class="build-tags">
+            <span class="build-tag">Vanilla JS</span>
+            <span class="build-tag">Rule Engine</span>
+            <span class="build-tag">Claude Vision (opt-in)</span>
+            <span class="build-tag">GitHub Pages</span>
+          </div>
+          <div class="build-actions">
+            <a href="https://july44944.github.io/halal-check/" class="build-btn build-btn-primary" target="_blank" rel="noopener">
+              <span class="en-text">Live Demo →</span><span class="zh-text" style="display:none">在线体验 →</span>
+            </a>
+            <a href="https://github.com/July44944/halal-check" class="build-btn build-btn-outline" target="_blank" rel="noopener">
+              <span class="en-text">View Source ↗</span><span class="zh-text" style="display:none">查看源码 ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ─── ABOUT ─── -->
 <section id="about">
   <div class="max-container">
     <div class="section-header fade-in">
-      <span class="section-num">02</span>
+      <span class="section-num">03</span>
       <div class="section-line"></div>
       <h2 class="section-title">
         <span data-en="About" data-zh="关于">About</span><span class="accent en-text"> Me</span><span class="accent zh-text" style="display:none"> 我</span>
@@ -643,7 +776,7 @@
 <section id="career">
   <div class="max-container">
     <div class="section-header fade-in">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <div class="section-line"></div>
       <h2 class="section-title">
         <span data-en="Career" data-zh="职业">Career</span><span class="accent en-text"> Journey</span><span class="accent zh-text" style="display:none"> 经历</span>
@@ -713,7 +846,7 @@
 <section id="travel">
   <div class="max-container">
     <div class="section-header fade-in">
-      <span class="section-num">04</span>
+      <span class="section-num">05</span>
       <div class="section-line"></div>
       <h2 class="section-title">
         <span data-en="Travel" data-zh="旅行">Travel</span><span class="accent en-text"> Diaries</span><span class="accent zh-text" style="display:none"> 日记</span>
@@ -749,14 +882,14 @@
   </div>
 </section>
 
-<!-- ─── PROJECTS ─── -->
-<section id="projects">
+<!-- ─── CAREER HIGHLIGHTS ─── -->
+<section id="highlights">
   <div class="max-container">
     <div class="section-header fade-in">
-      <span class="section-num">05</span>
+      <span class="section-num">06</span>
       <div class="section-line"></div>
       <h2 class="section-title">
-        <span data-en="Key" data-zh="核心">Key</span><span class="accent en-text"> Projects</span><span class="accent zh-text" style="display:none"> 项目案例</span>
+        <span data-en="Career" data-zh="职业">Career</span><span class="accent en-text"> Highlights</span><span class="accent zh-text" style="display:none"> 亮点</span>
       </h2>
     </div>
     <div class="projects-grid">
@@ -813,7 +946,7 @@
 <section id="contact">
   <div class="max-container">
     <div class="section-header fade-in">
-      <span class="section-num">06</span>
+      <span class="section-num">07</span>
       <div class="section-line"></div>
       <h2 class="section-title">
         <span data-en="Get in" data-zh="联系">Get in</span><span class="accent en-text"> Touch</span><span class="accent zh-text" style="display:none"> 我</span>
